@@ -115,6 +115,13 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 	  __DEBUG(2, "HT Trigger for Au+Au  run 10 ok");
 	  return kTRUE;
 	}
+        else if (mTrigId==350512 || mTrigId==350502 || // NPE15
+		 mTrigId==350513 || mTrigId==350503 || // NPE18
+		 mTrigId==350514 || mTrigId==350504 ) // NPE25
+	{
+	  __DEBUG(2, "HT Trigger for Au+Au  run 11 ok");
+	  return kTRUE;
+	}
       else
 	{
 	  return kFALSE;	
