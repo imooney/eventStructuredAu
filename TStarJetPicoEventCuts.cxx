@@ -280,7 +280,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
 Bool_t TStarJetPicoEventCuts::IsVertexZDiffOK(TStarJetPicoEvent *mEv)
 {
 Float_t Vz    =mEv->GetHeader()->GetPrimaryVertexZ();
-Float_t VpdVz =mEv->GetHeader()->GetvpdVz();
+Float_t VpdVz =mEv->GetHeader()->GetVpdVz();
 
 if(TMath::Abs(Vz-VpdVz)<fVzDiffCut)
   {

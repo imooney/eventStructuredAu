@@ -20,6 +20,12 @@ class TStarJetPicoEventHeader : public TObject
   Int_t   GetRunId()                     const {return fRunId;}
   Int_t   GetReferenceMultiplicity()     const {return fRefMult;}
   Int_t   GetGReferenceMultiplicity()    const {return fGRefMult;}
+  Int_t   GetReferenceCentrality()     const {return fRefCent;}
+  Int_t   GetGReferenceCentrality()    const {return fGRefCent;}
+  Double_t   GetReferenceCentralityWeight()     const {return fRefCentWeight;}
+  Double_t   GetGReferenceCentralityWeight()    const {return fGRefCentWeight;}
+  Double_t   GetCorrectedReferenceMultiplicity()     const {return fCorRefMult;}
+  Double_t   GetCorrectedGReferenceMultiplicity()    const {return fCorGRefMult;}
   Int_t   GetNGlobalTracks()             const {return fNOfGlobalTracks;}
   Float_t GetReactionPlaneAngle()        const {return fReactionPlaneAngle;}
   Int_t   GetTriggerId(Int_t ic)         const {return fTriggerIdArray.At(ic);}
@@ -39,8 +45,9 @@ class TStarJetPicoEventHeader : public TObject
   Float_t GetPrimaryVertexX()            const {return fPVx;}
   Float_t GetPrimaryVertexY()            const {return fPVy;}
   Float_t GetPrimaryVertexZ()            const {return fPVz;}
-
-  Float_t GetvpdVz()                     const{return fvpdVz;}
+ 
+  Float_t GetVpdVz()                     const{return fvpdVz;}
+  Float_t GetvpdVz()                     const{return GetVpdVz();} // kept for legacy code
   
   Float_t GetCTBMultiplicity()           const {return fCTBmult;}
   Float_t GetPrimaryVertexMeanDipAngle() const {return fMeanDip;}
@@ -74,6 +81,12 @@ class TStarJetPicoEventHeader : public TObject
   void SetRunId(Int_t val)                       {fRunId = val;}
   void SetReferenceMultiplicity(Int_t val)       {fRefMult = val;}
   void SetGReferenceMultiplicity(Int_t val)      {fGRefMult = val;}
+  void SetReferenceCentrality(Int_t val)       {fRefCent = val;}
+  void SetGReferenceCentrality(Int_t val)      {fGRefCent = val;}
+  void SetReferenceCentralityWeight(Double_t val)       {fRefCentWeight = val;}
+  void SetGReferenceCentralityWeight(Double_t val)      {fGRefCentWeight = val;}
+  void SetCorrectedReferenceMultiplicity(Double_t val)       {fCorRefMult = val;}
+  void SetCorrectedGReferenceMultiplicity(Double_t val)      {fCorGRefMult = val;}
 
   void SetNPrimaryTracks(Int_t val)              {fNOfPrimaryTracks = val;}
   void SetNFtpcPrimaryTracks(Int_t val)          {fNOfFtpcPrimaryTracks = val;}
@@ -134,6 +147,12 @@ class TStarJetPicoEventHeader : public TObject
   Int_t           fRunId;                // was runid; // run ID
   Int_t           fRefMult;              // reference multiplicity
   Int_t           fGRefMult;             // reference multiplicity for AuAu07
+  Int_t           fRefCent;              // StRefMultCorr centrality9
+  Int_t           fGRefCent;             // StRefMultCorr grefmult centrality9
+  Double_t        fRefCentWeight;        // StRefMultCorr event weight for trigger effiency
+  Double_t        fGRefCentWeight;       // StRefMultCorr event weight for trigger effiency
+  Double_t        fCorRefMult;           // StRefMultCorr Corrected refmult 
+  Double_t        fCorGRefMult;          // StRefMultCorr Corrected grefmult
   Int_t           fNOfGlobalTracks;      // was gtracks;    // number of global tracks
   Float_t         fReactionPlaneAngle;   // rplane;     // reaction plane orientation
   Int_t           fNOfTriggerIds;        // number of trigger ids 
@@ -150,7 +169,7 @@ class TStarJetPicoEventHeader : public TObject
   Float_t         fPVx;                  // primary vertex X coord
   Float_t         fPVy;                  // primary vertex Y coord
   Float_t         fPVz;                  // primary vertex Z coord
-  Float_t         fvpdVz;                //vpd Z 
+  Float_t         fvpdVz;                // vpd Z 
   Float_t         fCTBmult;              // entral barrel multiplicity 
   Float_t         fMeanDip;              // primary vertex mean dip angle
   Float_t         fRank;                 // ranking of the vertex

@@ -13,6 +13,12 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader()
   , fRunId(0)
   , fRefMult(0)
   , fGRefMult(0)
+  , fRefCent(-1)
+  , fGRefCent(-1)
+  , fRefCentWeight(0)
+  , fGRefCentWeight(0)
+  , fCorRefMult(0)
+  , fCorGRefMult(0)
   , fNOfGlobalTracks(0)
   , fReactionPlaneAngle(0)
   , fNOfTriggerIds(0)
@@ -24,10 +30,10 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader()
   , fNOfFtpcPrimaryTracks(0)
   , fNOfV0s(0)
   , fNOfEMCPoints(0)
-  , fPVx(0)
-  , fPVy(0)
-  , fPVz(0)
-  , fvpdVz(0)
+  , fPVx(-999.)
+  , fPVy(-999.)
+  , fPVz(-999.)
+  , fvpdVz(-999.)
   , fCTBmult(0)
   , fMeanDip(0)
   , fRank(0)
@@ -37,18 +43,18 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader()
   , fTrigMask(0)
   , fZdcWestRate(0)
   , fZdcEastRate(0)
-    , fZdcCoincidenceRate(0)
-    , fBbcWestRate(0)
-    , fBbcEastRate(0)
-    , fBbcCoincidenceRate(0)
-    , fBbcBlueBackgroundRate(0)
-    , fBbcYellowBackgroundRate(0)
-    , fBbcAdcSumEast(0)
-    , fBbcOnlineVertex(0)
-    , fBbcOfflineVertex(0)
-    , fRefMultFTPCE(0)
-    , fnumberOfVpdEastHits(0)
-    , fnumberOfVpdWestHits(0)
+  , fZdcCoincidenceRate(0)
+  , fBbcWestRate(0)
+  , fBbcEastRate(0)
+  , fBbcCoincidenceRate(0)
+  , fBbcBlueBackgroundRate(0)
+  , fBbcYellowBackgroundRate(0)
+  , fBbcAdcSumEast(0)
+  , fBbcOnlineVertex(0)
+  , fBbcOfflineVertex(0)
+  , fRefMultFTPCE(0)
+  , fnumberOfVpdEastHits(0)
+  , fnumberOfVpdWestHits(0)
 {
   fTriggerIdArray.Reset(0);
 }
@@ -59,6 +65,12 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader(const TStarJetPicoEventHeader &
   , fRunId(t.fRunId)
   , fRefMult(t.fRefMult)
   , fGRefMult(t.fGRefMult)
+  , fRefCent(t.fRefCent)
+  , fGRefCent(t.fGRefCent)
+  , fRefCentWeight(t.fRefCentWeight)
+  , fGRefCentWeight(t.fGRefCentWeight)
+  , fCorRefMult(t.fCorRefMult)
+  , fCorGRefMult(t.fCorGRefMult)    
   , fNOfGlobalTracks(t.fNOfGlobalTracks)
   , fReactionPlaneAngle(t.fReactionPlaneAngle)
   , fNOfTriggerIds(t.fNOfTriggerIds)
@@ -81,20 +93,20 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader(const TStarJetPicoEventHeader &
   , fNOfTrigObjs(t.fNOfTrigObjs)  
   , fDSMInput(t.fDSMInput)
   , fTrigMask(t.fTrigMask)
-    , fZdcWestRate(t.fZdcWestRate)
-    , fZdcEastRate(t.fZdcEastRate)
-    , fZdcCoincidenceRate(t.fZdcCoincidenceRate)
-    , fBbcWestRate(t.fBbcWestRate)
-    , fBbcEastRate(t.fBbcEastRate)
-    , fBbcCoincidenceRate(t.fBbcCoincidenceRate)
-    , fBbcBlueBackgroundRate(t.fBbcBlueBackgroundRate)
-    , fBbcYellowBackgroundRate(t.fBbcYellowBackgroundRate)
-    , fBbcAdcSumEast(t.fBbcAdcSumEast)
-    , fBbcOnlineVertex(t.fBbcOnlineVertex)
-    , fBbcOfflineVertex(t.fBbcOfflineVertex)
-    , fRefMultFTPCE(t.fRefMultFTPCE)
-    , fnumberOfVpdEastHits(t.fnumberOfVpdEastHits)
-    , fnumberOfVpdWestHits(t.fnumberOfVpdWestHits)
+  , fZdcWestRate(t.fZdcWestRate)
+  , fZdcEastRate(t.fZdcEastRate)
+  , fZdcCoincidenceRate(t.fZdcCoincidenceRate)
+  , fBbcWestRate(t.fBbcWestRate)
+  , fBbcEastRate(t.fBbcEastRate)
+  , fBbcCoincidenceRate(t.fBbcCoincidenceRate)
+  , fBbcBlueBackgroundRate(t.fBbcBlueBackgroundRate)
+  , fBbcYellowBackgroundRate(t.fBbcYellowBackgroundRate)
+  , fBbcAdcSumEast(t.fBbcAdcSumEast)
+  , fBbcOnlineVertex(t.fBbcOnlineVertex)
+  , fBbcOfflineVertex(t.fBbcOfflineVertex)
+  , fRefMultFTPCE(t.fRefMultFTPCE)
+  , fnumberOfVpdEastHits(t.fnumberOfVpdEastHits)
+  , fnumberOfVpdWestHits(t.fnumberOfVpdWestHits)
 {
   ;
 }
@@ -110,6 +122,12 @@ void TStarJetPicoEventHeader::Clear(Option_t */*Option*/)
   fRunId = 0;                
   fRefMult = 0;
   fGRefMult = 0;
+  fRefCent = 0;
+  fGRefCent = 0;
+  fRefCentWeight = 0;
+  fGRefCentWeight = 0;
+  fCorRefMult = 0;
+  fCorGRefMult = 0;
   fNOfGlobalTracks = 0;      
   fReactionPlaneAngle = 0;   
   fNOfTriggerIds = 0;            
@@ -123,10 +141,10 @@ void TStarJetPicoEventHeader::Clear(Option_t */*Option*/)
   fNOfFtpcPrimaryTracks = 0;   
   fNOfV0s = 0;  
   fNOfEMCPoints = 0;         
-  fPVx = 0;                  
-  fPVy = 0;                  
-  fPVz = 0;                  
-  fvpdVz =0;
+  fPVx = -999.;                  
+  fPVy = -999.;                  
+  fPVz = -999.;                  
+  fvpdVz = -999.;
   fCTBmult = 0;              
   fMeanDip = 0;              
   fRank = 0;                 
