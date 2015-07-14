@@ -250,6 +250,13 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
   // Add to surviving TStarJetVector to the output container.
   //
 
+  // KK: Make sure cuts are consistent
+  float MaxEventPtCut = fEventCuts->GetMaxEventPtCut();
+  float MaxPtCut = fTrackCuts->GetMaxPtCut();
+  if ( MaxEventPtCut < 99999 && MaxEventPtCut > MaxPtCut){
+    __WARNING(Form("MaxEventPtCut %f will not fire because MaxPtCut is %f.", MaxEventPtCut, MaxPtCut));
+  }
+
   TStarJetVector part;
   for (Int_t ntrack = 0; 
        ntrack < fEvent->GetHeader()->GetNOfPrimaryTracks(); 
@@ -264,6 +271,11 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
       if (fTrackCuts->IsTrackOK(ptrack) == kTRUE)
 	{
 	  Double_t pt = TMath::Sqrt(ptrack->GetPx()*ptrack->GetPx() + ptrack->GetPy()*ptrack->GetPy());
+	  // KK: Now that the track has passed quality control, check whether it's too high.
+	  if ( !(fEventCuts->IsHighestPtOK( pt )) ) {
+	    return kFALSE;
+	  }
+	  
 	  part.SetPtEtaPhiM(pt, ptrack->GetEta(), ptrack->GetPhi(), 0);
 	  part.SetType(TStarJetVector::_TRACK);
 	  part.SetCharge(ptrack->GetCharge());
@@ -293,6 +305,15 @@ Bool_t TStarJetPicoReader::LoadTowers()
   // Add to surviving TStarJetVector to the output container.
   // 
 
+  // KK: Make sure cuts are consistent
+  float MaxEventEtCut = fEventCuts->GetMaxEventEtCut();
+  float MaxEtCut = fTowerCuts->GetMaxEtCut();
+
+  if ( MaxEventEtCut < 99999 && MaxEventEtCut > MaxEtCut){
+    __WARNING(Form("MaxEventEtCut %f will not fire because MaxEtCut is %f.", MaxEventEtCut, MaxEtCut));
+  }
+
+  
   TStarJetVector part;
 
   for (Int_t ntower = 0; 
@@ -350,6 +371,11 @@ Bool_t TStarJetPicoReader::LoadTowers()
 	  if (correctedEnergy > 0)
 	    {
 	      Double_t mEt = correctedEnergy / TMath::CosH(ptower->GetEtaCorrected());
+	      // KK: Now that the tower has passed quality control, check whether it's too high.
+	      if ( !(fEventCuts->IsHighestEtOK( mEt )) ) {
+		return kFALSE;
+	      }
+	      
 	      part.SetPtEtaPhiM(mEt, ptower->GetEtaCorrected(), ptower->GetPhiCorrected(), 0);
 	      part.SetType(TStarJetVector::_TOWER);
 	      part.SetCharge(TStarJetVector::_NEUTRAL);	      

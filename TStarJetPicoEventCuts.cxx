@@ -28,6 +28,8 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts()
   , fBbceCutMax(99999)
   , fPVRankingCut(-10.) 
   , fFlagPVRankingCut(kFALSE) //reasonable value of PV Ranking Cut depends on PV finder & dataset used -> off by default!
+  , fMaxEventPt ( 99999 )
+  , fMaxEventEt ( 99999 ) 
 {
   __DEBUG(2, "Creating event cuts with default values.");
 }
@@ -43,6 +45,8 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t)
   , fBbceCutMax(t.fBbceCutMax)
   , fPVRankingCut(t.fPVRankingCut)
   , fFlagPVRankingCut(t.fFlagPVRankingCut)
+  , fMaxEventPt( t.fMaxEventPt )
+  , fMaxEventEt( t.fMaxEventEt )
 {
   __DEBUG(2, "Copy event cuts.");  
 }
@@ -444,3 +448,26 @@ Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv)
    }
   return retval;
 }
+
+Bool_t TStarJetPicoEventCuts::IsHighestPtOK( Float_t mPt )
+{
+  if ( mPt>fMaxEventPt ) {
+    __DEBUG(1,Form("Reject. %f>%f",mPt,fMaxEventPt));
+    return kFALSE;
+  }
+
+  __DEBUG(6,Form("Accept. %f<%f",mPt,fMaxEventPt));
+  return kTRUE;
+}
+
+Bool_t TStarJetPicoEventCuts::IsHighestEtOK( Float_t mEt )
+{
+  if ( mEt>fMaxEventEt ) {
+    __DEBUG(1,Form("Reject. %f>%f",mEt,fMaxEventEt));
+    return kFALSE;
+  }
+
+  _DEBUG(6,Form("Accept. %f<%f",mEt,fMaxEventEt));
+  return kTRUE;
+}
+
