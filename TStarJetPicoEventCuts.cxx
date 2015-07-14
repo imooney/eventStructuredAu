@@ -467,7 +467,7 @@ Bool_t TStarJetPicoEventCuts::IsHighestEtOK( Float_t mEt )
     return kFALSE;
   }
 
-  _DEBUG(6,Form("Accept. %f<%f",mEt,fMaxEventEt));
+  __DEBUG(6,Form("Accept. %f<%f",mEt,fMaxEventEt));
   return kTRUE;
 }
 
