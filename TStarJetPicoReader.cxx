@@ -341,8 +341,7 @@ Bool_t TStarJetPicoReader::LoadTowers()
 		      matchedTrack->SetType(TStarJetVector::_MATCHED);
 		      matchedTrack->SetPoverE(TStarJetPicoUtils::GetTowerPoverE(ptower, ptrack));
 		      if (TStarJetPicoUtils::IsElectron(ptower, ptrack) == kTRUE)
-			{
-			  
+			{			  
 			  matchedTrack->SetPID(__STARJETPICO_ELECTRON_PID);
 			  isElectronCandidate = kTRUE; // tower is probably an electron
 			} // is electron

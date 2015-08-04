@@ -198,6 +198,8 @@ Double_t TStarJetPicoTowerCuts::TowerEnergyMipCorr(TStarJetPicoTower *mTower)
    // MIP corr see SPIN !!!
   Double_t theta = 2.*atan(exp(mTower->GetEta()));
   Double_t MipE  = 0.261*(1.+0.056*mTower->GetEta()*mTower->GetEta())/sin(theta); //GeV
+  // KK: Note that sin ( 2.*atan(exp(mTower->GetEta())) ) == sech ( eta ) = 2*exp(x) / (exp(2*x)+1)
+  // KK: May want to simplify  
   Int_t    nTr   = mTower->GetNAssocTracks();
   Double_t Ecorr = mTowE - nTr * MipE;
 
