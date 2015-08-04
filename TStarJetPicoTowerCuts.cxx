@@ -24,7 +24,9 @@ ClassImp(TStarJetPicoTowerCuts)
 
 TStarJetPicoTowerCuts::TStarJetPicoTowerCuts()
   : TObject()
-  , fMaxEt(1000.) // by default, no cut effectively
+  , fMaxEt(1000.)// by default, no cut effectively
+  , fMaxPhi(0.0)
+  , fMinPhi(0.0)
   , y8PythiaCut(kFALSE)
 {
   __DEBUG(2, "Creating tower cuts with default values.");
@@ -33,6 +35,8 @@ TStarJetPicoTowerCuts::TStarJetPicoTowerCuts()
 TStarJetPicoTowerCuts::TStarJetPicoTowerCuts(const TStarJetPicoTowerCuts &t)
   : TObject(t)
   , fMaxEt(t.fMaxEt)
+  , fMaxPhi(t.fMaxPhi)
+  , fMinPhi(t.fMinPhi)
   , y8PythiaCut(t.y8PythiaCut)
 {
   __DEBUG(2, "Copy tower cuts.");  
@@ -190,6 +194,63 @@ Bool_t TStarJetPicoTowerCuts::CheckTowerQA(TStarJetPicoTower *tw, TStarJetPicoEv
   return IsTowerOK(tw, mEv);
 }
 
+//nick elsey: rejects towers based on lists of towers given at initialization
+Bool_t TStarJetPicoTowerCuts::CheckTowerAgainstLists(TStarJetPicoTower *tw)
+{
+    if (std::find(hotTowers.begin(), hotTowers.end(), tw->GetId() ) != hotTowers.end() )
+        return kFALSE;
+    if (std::find(deadTowers.begin(), deadTowers.end(), tw->GetId() ) != deadTowers.end() )
+        return kFALSE;
+    return kTRUE;
+}
+
+Bool_t TStarJetPicoTowerCuts::AddHotTower(Int_t Id)
+{
+    if ( Id > 4800 || Id < 1 ) {
+        __ERROR(Form("%d is out of range",Id));
+        return kFALSE;
+    }
+    hotTowers.push_back(Id);
+    return kTRUE;
+}
+
+Bool_t TStarJetPicoTowerCuts::AddDeadTower(Int_t Id)
+{
+    if ( Id > 4800 || Id < 1 ) {
+        __ERROR(Form("%d is out of range",Id));
+        return kFALSE;
+    }
+    deadTowers.push_back(Id);
+    return kTRUE;
+}
+
+Bool_t TStarJetPicoTowerCuts::AddHotTowers(std::vector<Int_t> Ids)
+{
+    for (unsigned i = 0; i < Ids.size(); ++i)
+        if ( Ids[i] > 4800 || Ids[i] < 1 ) {
+            __ERROR(Form("%d is out of range",Ids[i]));
+            return kFALSE;
+        }
+
+    for (unsigned i = 0; i < Ids.size(); ++i)
+        hotTowers.push_back(Ids[i]);
+    return kTRUE;
+}
+
+Bool_t TStarJetPicoTowerCuts::AddDeadTowers(std::vector<Int_t> Ids)
+{
+    for (unsigned i = 0; i < Ids.size(); ++i)
+        if ( Ids[i] > 4800 || Ids[i] < 1 ) {
+            __ERROR(Form("%d is out of range",Ids[i]));
+            return kFALSE;
+        }
+    
+    for (unsigned i = 0; i < Ids.size(); ++i)
+        deadTowers.push_back(Ids[i]);
+    return kTRUE;
+}
+
+
 // From Mark based on SPIN pp jet-finder !!!
 Double_t TStarJetPicoTowerCuts::TowerEnergyMipCorr(TStarJetPicoTower *mTower)
 {
@@ -198,8 +259,6 @@ Double_t TStarJetPicoTowerCuts::TowerEnergyMipCorr(TStarJetPicoTower *mTower)
    // MIP corr see SPIN !!!
   Double_t theta = 2.*atan(exp(mTower->GetEta()));
   Double_t MipE  = 0.261*(1.+0.056*mTower->GetEta()*mTower->GetEta())/sin(theta); //GeV
-  // KK: Note that sin ( 2.*atan(exp(mTower->GetEta())) ) == sech ( eta ) = 2*exp(x) / (exp(2*x)+1)
-  // KK: May want to simplify  
   Int_t    nTr   = mTower->GetNAssocTracks();
   Double_t Ecorr = mTowE - nTr * MipE;
 
@@ -236,4 +295,23 @@ Double_t TStarJetPicoTowerCuts::HadronicCorrection(TStarJetPicoTower *mTower,
     } // loop over associated tracks
   
   return Ecorr;
+}
+
+Bool_t TStarJetPicoTowerCuts::SetPhiCut(Double_t min, Double_t max)
+{
+    Bool_t retval = kTRUE;
+    if ( min > TMath::Pi() || min < (-1.0)*TMath::Pi() ) {
+        __ERROR("Phi minimum cut out of bounds [-Pi,Pi]. Using Defaults.");
+        retval = kFALSE;
+    }
+    if ( max > TMath::Pi() || max < (-1.0)*TMath::Pi() ) {
+        __ERROR("Phi maximum cut out of bounds [-Pi,Pi]. Using Defaults.");
+        retval = kFALSE;
+    }
+    if (!retval)
+        return kFALSE;
+    
+    fMinPhi = min;
+    fMaxPhi = max;
+    return kTRUE;
 }

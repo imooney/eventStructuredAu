@@ -37,6 +37,15 @@ class TStarJetPicoTrackCuts : public TObject
   Int_t    GetMinNFitPointsCut() {return fMinNfit;}
   Double_t GetFitOverMaxPointsCut() {return fFitOverMax;}
   Double_t GetMaxPtCut() {return fMaxPt;}
+    
+    // nick elsey: the range of phi values accepted; initially set at 0,0 - accepts everything
+    // to cut out a region, in [-Pi,Pi] MinPhi > MaxPhi
+    // added for year 11 analysis to help deal with a bad region in the TPC
+  Bool_t SetPhiCut(Double_t min, Double_t max);
+    
+  Double_t GetMinPhiCut() {return fMinPhi;}
+  Double_t GetMaxPhiCut() {return fMaxPhi;}
+  
 
  private:
 
@@ -44,6 +53,9 @@ class TStarJetPicoTrackCuts : public TObject
   Int_t    fMinNfit;
   Double_t fFitOverMax;
   Double_t fMaxPt;
+    
+  Double_t fMinPhi;
+  Double_t fMaxPhi;
 
   Double_t fMaxChi2;
   Bool_t   fPCT;

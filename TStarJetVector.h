@@ -112,6 +112,9 @@ class TStarJetVector : public TLorentzVector
 
   Int_t           GetType() {return fFeaturesI[_TYPE];}
   void            SetType(Int_t type) {fFeaturesI[_TYPE] = type;}
+    
+  Bool_t          IsTrigger() {return fTrigger;}
+  void            SetTriggerStatus(Bool_t value) {fTrigger = value;}
 
   Bool_t          IsCharged()
   {
@@ -143,6 +146,7 @@ class TStarJetVector : public TLorentzVector
 
   TArrayD fFeaturesD;
   TArrayI fFeaturesI;
+  Bool_t  fTrigger;
 
   ClassDef(TStarJetVector, 1)
 };

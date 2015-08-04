@@ -3,6 +3,7 @@
 #include "TStarJetPicoEventHeader.h"
 #include "TStarJetPicoDefinitions.h"
 #include "TMath.h"
+#include "TChain.h"
 
 /////////////////////////////////////////////////////////////////////////
 //                                                                     //
@@ -24,6 +25,8 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts()
   , fVzDiffCut(6.)
   , fRefMultCutMin(0)
   , fRefMultCutMax(99999)
+  , fRefCentCutMin(0)
+  , fRefCentCutMax(8)
   , fBbceCutMin(0)
   , fBbceCutMax(99999)
   , fPVRankingCut(-10.) 
@@ -41,6 +44,8 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t)
   , fVzDiffCut(t.fVzDiffCut)
   , fRefMultCutMin(t.fRefMultCutMin)
   , fRefMultCutMax(t.fRefMultCutMax)
+  , fRefCentCutMin(t.fRefCentCutMin)
+  , fRefCentCutMax(t.fRefCentCutMax)
   , fBbceCutMin(t.fBbceCutMin)
   , fBbceCutMax(t.fBbceCutMax)
   , fPVRankingCut(t.fPVRankingCut)
@@ -310,7 +315,7 @@ Int_t TStarJetPicoEventCuts::GetReferenceMultiplicity(TStarJetPicoEvent *mEv)
   return RefMult;
 }
 
-Bool_t TStarJetPicoEventCuts::IsRefMultOK(TStarJetPicoEvent *mEv)
+Bool_t TStarJetPicoEventCuts::IsRefMultOK(TStarJetPicoEvent *mEv, TChain *fInputTree)
 {
   Int_t RefMult = mEv->GetHeader()->GetReferenceMultiplicity();
   Int_t run     = mEv->GetHeader()->GetRunId();
@@ -322,6 +327,18 @@ Bool_t TStarJetPicoEventCuts::IsRefMultOK(TStarJetPicoEvent *mEv)
 		      fTrigSel.Data()));
        RefMult = mEv->GetHeader()->GetGReferenceMultiplicity();
      }
+    
+    TString triggerSel = fTrigSel;
+    triggerSel.ToUpper();
+    
+    //nick elsey: overriding this for run 11: using CorRefMult if its present
+    if ( ( ( (run-run%1000000)/1000000 ) == 12 ) && fInputTree->FindLeaf("fEventHeader.fCorRefMult") ) {
+        if ( triggerSel.Contains("HT") || triggerSel.Contains("MB") || triggerSel.Contains("ALL") ) {
+            RefMult = mEv->GetHeader()->GetCorrectedReferenceMultiplicity();
+        __DEBUG(1, Form("Switching to CorRefMult cut for y11 data. Trigger is %s",
+                        triggerSel.Data()));
+        }
+    }
 
   if (( RefMult > fRefMultCutMin) &&
       ( RefMult < fRefMultCutMax) )
@@ -334,6 +351,27 @@ Bool_t TStarJetPicoEventCuts::IsRefMultOK(TStarJetPicoEvent *mEv)
   __DEBUG(1, Form("Reject. %d < %d < %d", 
 		  fRefMultCutMin, RefMult, fRefMultCutMax));
   return kFALSE;  
+}
+
+Bool_t TStarJetPicoEventCuts::IsRefCentOK(TStarJetPicoEvent *mEv, TChain *fInputTree)
+{
+    if (fRefCentCutMin == 0 && fRefCentCutMax == 8) {
+        __DEBUG(1, Form("No Reference Centrality selected. "));
+        return kTRUE;
+    }
+    if ( !fInputTree->FindLeaf("fEventHeader.fRefCent") ) {
+        __ERROR("Reference centrality cut defined, but the leaf wasn't found. ")
+        return kFALSE;
+    }
+    Int_t refCent = mEv->GetHeader()->GetReferenceCentrality();
+    if ( (refCent >= fRefCentCutMin) && (refCent <= fRefCentCutMax) ) {
+        __DEBUG(1, Form("Accept. %d < %d < %d",
+                        fRefCentCutMin, refCent, fRefCentCutMax));
+        return kTRUE;
+    }
+    __DEBUG(1, Form("Reject. %d < %d < %d",
+                    fRefCentCutMin, refCent, fRefCentCutMax));
+    return kFALSE;
 }
 
 Bool_t TStarJetPicoEventCuts::IsVertexZOK(TStarJetPicoEvent *mEv)
@@ -423,15 +461,15 @@ Bool_t TStarJetPicoEventCuts::IsScalersOK(TStarJetPicoEvent *mEv)
 }
 
 
-Bool_t TStarJetPicoEventCuts::CheckEvent(TStarJetPicoEvent *mEv)
+Bool_t TStarJetPicoEventCuts::CheckEvent(TStarJetPicoEvent *mEv, TChain *fInputTree)
 {
-  return IsEventOK(mEv);
+  return IsEventOK(mEv, fInputTree);
 }
 
-Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv)
+Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv, TChain *fInputTree)
 {
   Bool_t retval;
-  retval = (IsRefMultOK(mEv) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
+  retval = (IsRefMultOK(mEv, fInputTree) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
   
   //cuts for dAu2008
   Int_t run = mEv->GetHeader()->GetRunId();
@@ -469,5 +507,26 @@ Bool_t TStarJetPicoEventCuts::IsHighestEtOK( Float_t mEt )
 
   __DEBUG(6,Form("Accept. %f<%f",mEt,fMaxEventEt));
   return kTRUE;
+}
+
+Bool_t TStarJetPicoEventCuts::SetReferenceCentralityCut(Int_t min, Int_t max)
+{
+    if (min > max) {
+        __ERROR("Reference centrality minimum set greater than maximum. Using Defaults.");
+        return kFALSE;
+    }
+    if (min < 0) {
+        __ERROR("Reference centrality minimum set less than zero. Using Defaults");
+        return kFALSE;
+    }
+    if (max > 8) {
+        __ERROR("Reference centrality minimum set greater than eight. Using Defaults.");
+        return kFALSE;
+    }
+    
+    fRefCentCutMax = max;
+    fRefCentCutMin = min;
+    return kTRUE;
+    
 }
 

@@ -33,6 +33,7 @@ TStarJetVector::TStarJetVector()
   : TLorentzVector()
   , fFeaturesD(__TStarJetVector_NfeauresD)
   , fFeaturesI(__TStarJetVector_NfeauresI)
+  , fTrigger(kFALSE)
 {
   Clear();
 }
@@ -41,6 +42,7 @@ TStarJetVector::TStarJetVector(const TStarJetVector &v)
   : TLorentzVector(v)
   , fFeaturesD(v.fFeaturesD)
   , fFeaturesI(v.fFeaturesI)
+  , fTrigger(kFALSE)
 {
   ;
 }
@@ -77,6 +79,7 @@ void TStarJetVector::Clear(Option_t *option)
   fFeaturesI.Set(__TStarJetVector_NfeauresD);
   fFeaturesD.Reset(0.0);
   fFeaturesI.Reset(0);
+  fTrigger = kFALSE;
 }
 
 double TStarJetVector::phi() const 

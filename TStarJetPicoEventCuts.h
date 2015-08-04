@@ -3,6 +3,7 @@
 
 #include <TObject.h>
 #include <TString.h>
+#include <TChain.h>
 
 class TStarJetPicoEvent;
 
@@ -13,12 +14,13 @@ class TStarJetPicoEventCuts : public TObject
   TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t);
   virtual ~TStarJetPicoEventCuts() {;} //nothing to delete here
 
-  virtual Bool_t IsEventOK(TStarJetPicoEvent *mEv);  // kTRUE if OK; kFALSE otherwise
-  virtual Bool_t CheckEvent(TStarJetPicoEvent *mEv); // kTRUE if OK; kFALSE otherwise
+  virtual Bool_t IsEventOK(TStarJetPicoEvent *mEv, TChain *fInputTree);  // kTRUE if OK; kFALSE otherwise
+  virtual Bool_t CheckEvent(TStarJetPicoEvent *mEv, TChain *fInputTree); // kTRUE if OK; kFALSE otherwise
 
   virtual Bool_t IsTriggerIdOK(Int_t mTrigId);
   virtual Bool_t IsTriggerIdOK(TStarJetPicoEvent *mEv);
-  virtual Bool_t IsRefMultOK(TStarJetPicoEvent *mEv);
+  virtual Bool_t IsRefMultOK(TStarJetPicoEvent *mEv, TChain *fInputTree);
+  virtual Bool_t IsRefCentOK(TStarJetPicoEvent *mEv, TChain *fInputTree);
   virtual Bool_t IsVertexZOK(TStarJetPicoEvent *mEv);
   virtual Bool_t IsVertexZDiffOK(TStarJetPicoEvent *mEv);
   virtual Bool_t IsPVRankingOK(TStarJetPicoEvent *mEv);
@@ -44,6 +46,19 @@ class TStarJetPicoEventCuts : public TObject
     fBbceCutMin = valmin; 
     fBbceCutMax = valmax;
   }
+    
+    //nick elsey: for use with centrality definitions given here... TENTATIVE - check the definition
+    //nick elsey: always returns true if the corresponding leaf doesn't exist
+    // 8 : 0-5%
+    // 7 : 5-10%
+    // 5 : 10-20%
+    // 4 : 20-30%
+    // 3 : 30-40%
+    // 2 : 40-50%
+    // 1 : 50-60%
+    // 0 : 60-80%
+  virtual Bool_t   SetReferenceCentralityCut(Int_t min, Int_t max);
+    
   virtual void   SetPVRankingCut(Float_t val) {fFlagPVRankingCut=kTRUE; fPVRankingCut = val;}
   virtual void   SetPVRankingCutOff() {fFlagPVRankingCut=kFALSE;}
 
@@ -63,6 +78,9 @@ class TStarJetPicoEventCuts : public TObject
 
   Float_t GetMaxEventPtCut()     {return fMaxEventPt;}
   Float_t GetMaxEventEtCut()     {return fMaxEventEt;}
+    
+  Int_t   GetRefCentMin()       {return fRefCentCutMin;}
+  Int_t   GetRefCentMax()       {return fRefCentCutMax;}
 
  private:
 
@@ -72,6 +90,8 @@ class TStarJetPicoEventCuts : public TObject
 
   Int_t   fRefMultCutMin; // accept all events with refmult: refmult > fRefMultCutMin && refmult < fRefMultCutMax
   Int_t   fRefMultCutMax;  // accept all events with refmult: refmult > fRefMultCutMin && refmult < fRefMultCutMax
+  Int_t   fRefCentCutMin;
+  Int_t   fRefCentCutMax;
   Int_t   fBbceCutMin;
   Int_t   fBbceCutMax;
   Float_t fPVRankingCut;
@@ -79,7 +99,6 @@ class TStarJetPicoEventCuts : public TObject
   
   Float_t fMaxEventPt;
   Float_t fMaxEventEt;
-
   
   ClassDef(TStarJetPicoEventCuts, 3)
 };

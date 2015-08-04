@@ -27,6 +27,8 @@ TStarJetPicoTrackCuts::TStarJetPicoTrackCuts()
   , fMaxChi2(1000.) // no cut effectively
   , fPCT(kFALSE)
   , fFlagMaxChi2(kFALSE)
+  , fMinPhi(0.0)
+  , fMaxPhi(0.0)
 {
   __DEBUG(2, "Creating track cuts with default values.");  
 }
@@ -40,6 +42,8 @@ TStarJetPicoTrackCuts::TStarJetPicoTrackCuts(const TStarJetPicoTrackCuts &t)
   , fMaxChi2(t.fMaxChi2)
   , fPCT(t.fPCT)
   , fFlagMaxChi2(t.fFlagMaxChi2)
+  , fMinPhi(t.fMinPhi)
+  , fMaxPhi(t.fMaxPhi)
 {
   __DEBUG(2, "Copy track cuts.");  
 }
@@ -139,4 +143,23 @@ Bool_t TStarJetPicoTrackCuts::IsTrackOK(TStarJetPicoPrimaryTrack *tr)
 Bool_t TStarJetPicoTrackCuts::CheckTrackQA(TStarJetPicoPrimaryTrack *tr)
 {
   return IsTrackOK(tr);
+}
+
+Bool_t TStarJetPicoTrackCuts::SetPhiCut(Double_t min, Double_t max)
+{
+    Bool_t retval = kTRUE;
+    if ( min > TMath::Pi() || min < (-1.0)*TMath::Pi() ) {
+        __ERROR("Phi minimum cut out of bounds [-Pi,Pi]");
+        retval = kFALSE;
+    }
+    if ( max > TMath::Pi() || max < (-1.0)*TMath::Pi() ) {
+        __ERROR("Phi maximum cut out of bounds [-Pi,Pi]");
+        retval = kFALSE;
+    }
+    if (!retval)
+        return retval;
+    
+    fMinPhi = min;
+    fMaxPhi = max;
+    return kTRUE;
 }
