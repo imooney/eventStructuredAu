@@ -71,7 +71,7 @@ Int_t TStarJetVectorJet::GetIndex(Int_t i)
 { 
   if ( i >= fNConstituents )
     {
-      __WARNING(Form("Asking index %d but number of filled constituents is %d.", fNConstituents));
+      __WARNING(Form("Asking index %d but number of filled constituents is %d.", i, fNConstituents));
     }
 
   return fConstituentIndexes.At(i);

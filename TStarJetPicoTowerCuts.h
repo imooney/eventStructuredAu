@@ -3,6 +3,8 @@
 
 #include <TObject.h>
 
+#include <set>
+
 class TStarJetPicoEvent;
 class TStarJetPicoTower;
 class TStarJetPicoTrackCuts;
@@ -56,8 +58,8 @@ class TStarJetPicoTowerCuts : public TObject
   
   Bool_t y8PythiaCut;
     
-  std::vector<Int_t> hotTowers;
-  std::vector<Int_t> deadTowers;
+  std::set<Int_t> hotTowers;
+  std::set<Int_t> deadTowers;
 
   ClassDef(TStarJetPicoTowerCuts, 3)
 };

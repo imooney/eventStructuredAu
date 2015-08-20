@@ -248,7 +248,7 @@ Int_t TStarJetPicoReaderBase::ReadEvent(Long64_t ientry)
     {
       if (fEvent == 0)
 	{
-	  __ERROR(Form("Bad event pointer 0x%x", fEvent));
+	  __ERROR(Form("Bad event pointer %p", fEvent));
 	  return -1;
 	}
 
@@ -284,7 +284,7 @@ Int_t TStarJetPicoReaderBase::ReadEvent(Long64_t ientry)
     fStopwatch->Stop();
 
   __ERROR(Form("Request for an event %lld outside limits (%lld-%lld). NEntries is %lld", 
-	       ientry, 0, fNofEntries-1, fNofEntries));
+	       ientry, 0ll, fNofEntries-1, fNofEntries));
 
   return -1;
 }

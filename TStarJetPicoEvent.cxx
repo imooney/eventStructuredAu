@@ -228,10 +228,9 @@ TStarJetPicoPrimaryTrack *TStarJetPicoEvent::GetMatchedPrimaryTrack(Int_t nTower
       track = this->GetPrimaryTrack(tindex);	      
     }
   
-  if (track == 0)
-    {
-      __ERROR(Form("Unable to get track matched with index %d to tower %d", nTrack, nTower));
-    }
+  if (track == 0) {
+    __ERROR(Form("Unable to get track matched with index %d to tower %d", nTrack, nTower));
+  }
 
   return track;
 }
@@ -243,10 +242,9 @@ TStarJetPicoPrimaryTrack *TStarJetPicoEvent::GetMatchedPrimaryTrack(TStarJetPico
   Int_t tindex = tower->GetMatchedTrackIndexes()->At(nTrack);
   track = this->GetPrimaryTrack(tindex);	      
 
-  if (track == 0)
-    {
-      __ERROR(Form("Unable to get track matched with index %d matched to tower 0x%x", nTrack, tower));
-    }
+  if (track == 0) {
+    __ERROR(Form("Unable to get track matched with index %d matched to tower 0x%x", nTrack, tower->GetId()));
+  }
 
   return track;
 }

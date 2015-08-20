@@ -1,9 +1,6 @@
 DEPENDROOT    = $(shell [ -n "${ROOTSYS}" ] && echo ${ROOTSYS} || echo "ROOTSYS_NOTSET" )
 
 include ./Makefile.arch
-#include $(DEPENDROOT)/etc/Makefile.arch
-
-#include /Users/putschke/ktJet/jetPico/eventStructure/Makerfile.arch
 
 MODULE	      = TStarJetPico
 
@@ -36,6 +33,10 @@ MODLIB        = $(shell pwd)/$(MODSO)
 endif
 
 OBJS          = $(MODO)
+
+# # suppress warnings during dictionary creation
+CXXFLAGS		+= -Wno-return-type-c-linkage
+
 
 .SUFFIXES: .$(SrcSuf) .$(ObjSuf) .$(DllSuf)
 

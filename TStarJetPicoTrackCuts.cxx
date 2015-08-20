@@ -24,11 +24,11 @@ TStarJetPicoTrackCuts::TStarJetPicoTrackCuts()
   , fMinNfit(20)
   , fFitOverMax(0.52)
   , fMaxPt(1000.) // by default, no cut effectively
+  , fMinPhi(0.0)
+  , fMaxPhi(0.0)
   , fMaxChi2(1000.) // no cut effectively
   , fPCT(kFALSE)
   , fFlagMaxChi2(kFALSE)
-  , fMinPhi(0.0)
-  , fMaxPhi(0.0)
 {
   __DEBUG(2, "Creating track cuts with default values.");  
 }
@@ -39,11 +39,11 @@ TStarJetPicoTrackCuts::TStarJetPicoTrackCuts(const TStarJetPicoTrackCuts &t)
   , fMinNfit(t.fMinNfit)
   , fFitOverMax(t.fFitOverMax)
   , fMaxPt(t.fMaxPt)
+  , fMinPhi(t.fMinPhi)
+  , fMaxPhi(t.fMaxPhi)
   , fMaxChi2(t.fMaxChi2)
   , fPCT(t.fPCT)
   , fFlagMaxChi2(t.fFlagMaxChi2)
-  , fMinPhi(t.fMinPhi)
-  , fMaxPhi(t.fMaxPhi)
 {
   __DEBUG(2, "Copy track cuts.");  
 }

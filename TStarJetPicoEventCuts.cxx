@@ -448,9 +448,9 @@ Bool_t TStarJetPicoEventCuts::IsScalersOK(TStarJetPicoEvent *mEv)
   // bbcbb check (for 1-second scalers)
   Double_t R1 = 1.4923e-3*TMath::Power(zdcw,-2.57818)*TMath::Power(bbcw,3.6488);
   Double_t R2 = bbcbb/R1;
-  if ((R2 > 0.2) && (R2 < 0.72) ||
-      (R2 > 1.4) && (R2 < 4.6)) retval=kFALSE;
-
+  if ( ( R2 > 0.2 && R2 < 0.72 ) ||
+       ( R2 > 1.4 && R2 < 4.6  )   ) retval=kFALSE;
+  
   if (retval==kTRUE) {
     __DEBUG(1, Form("Accept. Corrupt scalers cut ok."));
     return kTRUE;

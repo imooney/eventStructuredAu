@@ -96,7 +96,7 @@ void TStarJetPicoQAHistograms::Init()
 
 
 
-  __INFO(Form("Init %s at 0x%x.", this->GetName(), this));
+  __INFO(Form("Init %s at %p.", this->GetName(), this));
 
   gDirectory->cd(pwd.Data());
 
@@ -229,12 +229,12 @@ TStarJetPicoQAHistograms *TStarJetPicoQAHistograms::Instance()
 
   if (TStarJetPicoQAHistograms::fInstance == 0)
     {
-      __INFO_FUNCTION(Form("Creating new because singleton TStarJetPicoQAHistograms is 0x%x", 
+      __INFO_FUNCTION(Form("Creating new because singleton TStarJetPicoQAHistograms is %p", 
 			   TStarJetPicoQAHistograms::fInstance));
       TStarJetPicoQAHistograms::fInstance = 
 	new TStarJetPicoQAHistograms("StarJetQAPlotsSingleton", "StarJetQAPlotsSingleton");
 
-      __INFO_FUNCTION(Form("Creating new %s at 0x%x.", 
+      __INFO_FUNCTION(Form("Creating new %s at %p.", 
 			   TStarJetPicoQAHistograms::fInstance->GetName(), 
 			   TStarJetPicoQAHistograms::fInstance));
     }
@@ -297,7 +297,7 @@ Int_t TStarJetPicoQAHistograms::WriteHistogramsToFile(TFile *fin)
     }
   else
     {
-      __ERROR(Form("Unable to write to file. File pointer is 0x%x", fin));
+      __ERROR(Form("Unable to write to file. File pointer is %p", fin));
     }
   return cbytes;
 }

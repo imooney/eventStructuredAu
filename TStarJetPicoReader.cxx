@@ -40,7 +40,7 @@
 ClassImp(TStarJetPicoReader)
 
 TStarJetPicoReader::TStarJetPicoReader() 
-  : TStarJetPicoReaderBase()
+: TStarJetPicoReaderBase()
   , fEventCuts(new TStarJetPicoEventCuts)
   , fTrackCuts(new TStarJetPicoTrackCuts)
   , fTowerCuts(new TStarJetPicoTowerCuts)
@@ -140,7 +140,7 @@ Bool_t TStarJetPicoReader::LoadEvent()
       return kFALSE;
     }
 
-    //nick elsey: check against vector of restricted run numbers
+  //nick elsey: check against vector of restricted run numbers
   Int_t run = fEvent->GetHeader()->GetRunId();
   if (std::find(fMaskedRuns.begin(), fMaskedRuns.end(), run) != fMaskedRuns.end())
     return kFALSE;
@@ -263,20 +263,20 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
     __WARNING(Form("MaxEventPtCut %f will not fire because MaxPtCut is %f.", MaxEventPtCut, MaxPtCut));
   }
     
-    //nick elsey: check to see if there is a phi range restriction
+  //nick elsey: check to see if there is a phi range restriction
   Double_t phiMin = fTrackCuts->GetMinPhiCut();
   Double_t phiMax = fTrackCuts->GetMaxPhiCut();
   Bool_t phiRange = kFALSE;
   Bool_t restrictToInsidePhiRange = kTRUE;
     
   if ( !(phiMin == 0.0 && phiMax == 0.0) )
-        phiRange = kTRUE;
+    phiRange = kTRUE;
   if ( phiMin > phiMax ) {
-        phiRange = kTRUE;
-        restrictToInsidePhiRange = kFALSE;
-        Double_t temporary = phiMin;
-        phiMin = phiMax;
-        phiMax = temporary;
+    phiRange = kTRUE;
+    restrictToInsidePhiRange = kFALSE;
+    Double_t temporary = phiMin;
+    phiMin = phiMax;
+    phiMax = temporary;
   }
 
   TStarJetVector part;
@@ -289,11 +289,11 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
       // nick elsey: first check for phi resrictions
       if ( phiRange && restrictToInsidePhiRange ) {
         if ( phiMin > ptrack->GetPhi() || phiMax < ptrack->GetPhi() )
-            continue;
+	  continue;
       }
       else if ( phiRange && !restrictToInsidePhiRange ) {
         if ( phiMin < ptrack->GetPhi() && phiMax > ptrack->GetPhi() )
-            continue;
+	  continue;
       }
 
       // check if track taken by V0 - if yes skip it here
@@ -318,7 +318,7 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
 	  part.SetFeatureD(TStarJetVector::_NSIGMA_PROTON, ptrack->GetNsigmaProton());      
 	  part.SetFeatureD(TStarJetVector::_NSIGMA_ELECTRON, ptrack->GetNsigmaElectron()); 
 	  part.SetFeatureD(TStarJetVector::_DEDX, ptrack->GetdEdx());
-      part.SetTrackID(-1);
+	  part.SetTrackID(-1);
 
 	  part.SetFeatureI(TStarJetVector::_KEY, ptrack->GetKey());
 	  fOutputContainer->Add(&part);
@@ -352,8 +352,7 @@ Bool_t TStarJetPicoReader::LoadTowers()
   Bool_t phiRange = kFALSE;
   Bool_t restrictToInsidePhiRange = kTRUE;
     
-  if ( !(phiMin == 0.0 && phiMax == 0.0) )
-    phiRange = kTRUE;
+  if ( !(phiMin == 0.0 && phiMax == 0.0) )    phiRange = kTRUE;
   if ( phiMin > phiMax ) {
     phiRange = kTRUE;
     restrictToInsidePhiRange = kFALSE;
@@ -361,94 +360,89 @@ Bool_t TStarJetPicoReader::LoadTowers()
     phiMin = phiMax;
     phiMax = temporary;
   }
-    
+  
   TStarJetVector part;
-    
+  
   for (Int_t ntower = 0;
        ntower < fEvent->GetHeader()->GetNOfTowers(); 
-       ntower++)
-    { 
-      TStarJetPicoTower *ptower = fEvent->GetTower(ntower);
-      Bool_t isElectronCandidate = kFALSE;
+       ntower++) { 
+    TStarJetPicoTower *ptower = fEvent->GetTower(ntower);
+    Bool_t isElectronCandidate = kFALSE;
         
-      //nick elsey: check if its on the masked lists for hot and dead towers
-      if ( !(fTowerCuts->CheckTowerAgainstLists(ptower)) )
-          continue;
+    //nick elsey: check if its on the masked lists for hot and dead towers
+    if ( !(fTowerCuts->CheckTowerAgainstLists(ptower)) )      continue;
         
-      if (fTowerCuts->IsTowerOK(ptower, fEvent) == kTRUE) {
-          // nick elsey: first check to see that the tower is in the correct phi region
-          if ( phiRange && restrictToInsidePhiRange ) {
-              if ( phiMin > ptower->GetPhi() || phiMax < ptower->GetPhi() )
-                  continue;
-          }
-          else if ( phiRange && !restrictToInsidePhiRange ) {
-              if ( phiMin < ptower->GetPhi() && phiMax > ptower->GetPhi() )
-                  continue;
-          }
+    if (fTowerCuts->IsTowerOK(ptower, fEvent) == kTRUE) {
+      // nick elsey: first check to see that the tower is in the correct phi region
+      if ( phiRange && restrictToInsidePhiRange ) {
+	if ( phiMin > ptower->GetPhi() || phiMax < ptower->GetPhi() )
+	  continue;
+      }
+      else if ( phiRange && !restrictToInsidePhiRange ) {
+	if ( phiMin < ptower->GetPhi() && phiMax > ptower->GetPhi() )
+	  continue;
+      }
           
-	  // check the associated tracks
-	  for (Int_t ntrack = 0; ntrack < ptower->GetNAssocTracks(); ntrack++)
+      // check the associated tracks
+      for (Int_t ntrack = 0; ntrack < ptower->GetNAssocTracks(); ntrack++)
+	{
+	  Int_t idx = ptower->GetMatchedTrackIndex(ntrack);
+	  TStarJetPicoPrimaryTrack *ptrack = fEvent->GetPrimaryTrack(idx);
+	  if (fTrackCuts->IsTrackOK(ptrack) == kTRUE)
 	    {
-	      Int_t idx = ptower->GetMatchedTrackIndex(ntrack);
-	      TStarJetPicoPrimaryTrack *ptrack = fEvent->GetPrimaryTrack(idx);
-	      if (fTrackCuts->IsTrackOK(ptrack) == kTRUE)
+	      Int_t key = ptrack->GetKey();
+	      TStarJetVector *matchedTrack = TStarJetPicoReader::FindVectorByKey(key);
+	      if (matchedTrack == 0)
 		{
-		  Int_t key = ptrack->GetKey();
-		  TStarJetVector *matchedTrack = TStarJetPicoReader::FindVectorByKey(key);
-		      if (matchedTrack == 0)
-			{
-			  __ERROR(Form("For some reason this track was not accepted! Key: %d", key));
-			  continue;
-			}
-		      matchedTrack->SetType(TStarJetVector::_MATCHED);
-		      matchedTrack->SetPoverE(TStarJetPicoUtils::GetTowerPoverE(ptower, ptrack));
-		      if (TStarJetPicoUtils::IsElectron(ptower, ptrack) == kTRUE)
-			{
+		  __ERROR(Form("For some reason this track was not accepted! Key: %d", key));
+		  continue;
+		}
+	      matchedTrack->SetType(TStarJetVector::_MATCHED);
+	      matchedTrack->SetPoverE(TStarJetPicoUtils::GetTowerPoverE(ptower, ptrack));
+	      if (TStarJetPicoUtils::IsElectron(ptower, ptrack) == kTRUE)
+		{
 			  
-			  matchedTrack->SetPID(__STARJETPICO_ELECTRON_PID);
-			  isElectronCandidate = kTRUE; // tower is probably an electron
-			} // is electron
-		} // track is OK
-	    } // loop over associated tracks
+		  matchedTrack->SetPID(__STARJETPICO_ELECTRON_PID);
+		  isElectronCandidate = kTRUE; // tower is probably an electron
+		} // is electron
+	    } // track is OK
+	} // loop over associated tracks
 
-	  // do not accept electrons if necessary
-	  if (fRejectTowerElectrons == kTRUE && isElectronCandidate == kTRUE)
-	    continue;
+      // do not accept electrons if necessary
+      if (fRejectTowerElectrons == kTRUE && isElectronCandidate == kTRUE)
+	continue;
 
-	  // correct OR not the MIP
-	  Double_t correctedEnergy = ptower->GetEnergy();
-	  if (fApplyMIPCorrection == kTRUE)
-	    {
-	      correctedEnergy = fTowerCuts->TowerEnergyMipCorr(ptower);
-	    }
-	  else if (fApplyFractionHadronicCorrection == kTRUE)
-	    {
-	      correctedEnergy = fTowerCuts->HadronicCorrection(ptower,
-							       fEvent,
-							       fTrackCuts,
-							       fFractionHadronicCorrection);	      
-	    }
+      // correct OR not the MIP
+      Double_t correctedEnergy = ptower->GetEnergy();
+      if (fApplyMIPCorrection == kTRUE) {
+	correctedEnergy = fTowerCuts->TowerEnergyMipCorr(ptower);
+      } else if (fApplyFractionHadronicCorrection == kTRUE) {
+	correctedEnergy = fTowerCuts->HadronicCorrection(ptower,
+							 fEvent,
+							 fTrackCuts,
+							 fFractionHadronicCorrection);
+      }
 	  
-	  // fill the container
-	  if (correctedEnergy > 0)
-	    {
-	      Double_t mEt = correctedEnergy / TMath::CosH(ptower->GetEtaCorrected());
-	      // KK: Now that the tower has passed quality control, check whether it's too high.
-	      if ( !(fEventCuts->IsHighestEtOK( mEt )) ) {
-		return kFALSE;
-	      }
+      // fill the container
+      if (correctedEnergy > 0)
+	{
+	  Double_t mEt = correctedEnergy / TMath::CosH(ptower->GetEtaCorrected());
+	  // KK: Now that the tower has passed quality control, check whether it's too high.
+	  if ( !(fEventCuts->IsHighestEtOK( mEt )) ) {
+	    return kFALSE;
+	  }
 	      
-	      part.SetPtEtaPhiM(mEt, ptower->GetEtaCorrected(), ptower->GetPhiCorrected(), 0);
-	      part.SetType(TStarJetVector::_TOWER);
-	      part.SetCharge(TStarJetVector::_NEUTRAL);	      
-	      part.SetPID(fTowerCuts->DoPID(ptower)); // not known yet...
-          part.SetTowerID(ptower->GetId());
+	  part.SetPtEtaPhiM(mEt, ptower->GetEtaCorrected(), ptower->GetPhiCorrected(), 0);
+	  part.SetType(TStarJetVector::_TOWER);
+	  part.SetCharge(TStarJetVector::_NEUTRAL);	      
+	  part.SetPID(fTowerCuts->DoPID(ptower)); // not known yet...
+	  part.SetTowerID(ptower->GetId());
 
-	      fOutputContainer->Add(&part);
-	      fSelectedTowers->AddLast(ptower);
-	    }
-	} // tower QA
-    }
+	  fOutputContainer->Add(&part);
+	  fSelectedTowers->AddLast(ptower);
+	}
+    } // tower QA
+  }
 
   return kTRUE;
 }
@@ -495,7 +489,7 @@ void TStarJetPicoReader::SetEventCuts(TStarJetPicoEventCuts* parg)
 void TStarJetPicoReader::SetTrackCuts(TStarJetPicoTrackCuts* parg)
 {
   //
-  // Set Track cuts. Should be an inheritted class from TStarJetPicoTrackCuts.
+  // Set Track cuts. Should be an inherited class from TStarJetPicoTrackCuts.
   //
 
   // this is just a precaution... should not happen! ;)
@@ -611,11 +605,11 @@ void TStarJetPicoReader::SetV0Cuts(TStarJetPicoV0Cuts* parg)
 
 void TStarJetPicoReader::AddMaskedRun(Int_t Id)
 {
-    fMaskedRuns.push_back(Id);
+  fMaskedRuns.push_back(Id);
 }
 
 void TStarJetPicoReader::AddMaskedRuns(std::vector<Int_t> Ids)
 {
-    for (unsigned i = 0; i < Ids.size(); ++i)
-        fMaskedRuns.push_back(Ids[i]);
+  for (unsigned i = 0; i < Ids.size(); ++i)
+    fMaskedRuns.push_back(Ids[i]);
 }

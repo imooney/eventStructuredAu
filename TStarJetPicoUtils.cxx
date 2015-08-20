@@ -337,7 +337,7 @@ void TStarJetPicoUtils::PrintPicoReaderInfo(TStarJetPicoReaderBase *reader)
   // Info taken from TStarJetPicoReader.
   //
 
-  __INFOF(Form("Reader at: 0x%x\t of %s\t Event at 0x%x", 
+  __INFOF(Form("Reader at: %p\t of %s\t Event at %p", 
 	       reader, reader->IsA()->GetName(), reader->GetEvent()));
   TFile *fin = reader->GetInputChain()->GetCurrentFile();
   __INFOF(Form(" Current file: %s", fin->GetName()));

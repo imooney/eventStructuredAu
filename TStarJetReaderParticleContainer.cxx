@@ -45,7 +45,7 @@ Int_t TStarJetReaderParticleContainer::ReadEvent(Long64_t ientry)
     {
       if (fOutputContainer == 0)
 	{
-	  __ERROR(Form("Bad output container pointer 0x%x", fOutputContainer));
+	  __ERROR(Form("Bad output container pointer %p", fOutputContainer));
 	  return -1;
 	}
 
@@ -80,7 +80,7 @@ Int_t TStarJetReaderParticleContainer::ReadEvent(Long64_t ientry)
     GetStopWatch()->Stop();
 
   __ERROR(Form("Request for an event outside limits (%lld-%lld). NEntries is %lld", 
-	       0, fNofEntries-1, fNofEntries));
+	       0ll, fNofEntries-1, fNofEntries));
 
   return -1;
 }
