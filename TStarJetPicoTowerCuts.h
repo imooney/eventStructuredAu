@@ -16,7 +16,6 @@ class TStarJetPicoTowerCuts : public TObject
   TStarJetPicoTowerCuts(const TStarJetPicoTowerCuts &t);
   virtual ~TStarJetPicoTowerCuts() {;} // nothing to delete
 
-  virtual Bool_t IsTowerOK(Int_t mTowId, Int_t mTrigId);
   virtual Bool_t IsTowerOK(TStarJetPicoTower *tw, TStarJetPicoEvent *mEv);
   virtual Bool_t CheckTowerQA(TStarJetPicoTower *tw, TStarJetPicoEvent *mEv);
     
@@ -51,6 +50,11 @@ class TStarJetPicoTowerCuts : public TObject
   Bool_t Gety8PythiaCut() {return y8PythiaCut;}
 
  private:
+  /// The other method of this name has extra checks, this one shouldn't be used by itself
+  virtual Bool_t IsTowerOK(Int_t mTowId, Int_t mTrigId);
+  
+
+
   Double_t fMaxEt;
   
   Double_t fMaxPhi;
