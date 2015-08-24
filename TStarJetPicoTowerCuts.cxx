@@ -44,58 +44,59 @@ TStarJetPicoTowerCuts::TStarJetPicoTowerCuts(const TStarJetPicoTowerCuts &t)
 
 Bool_t TStarJetPicoTowerCuts::IsTowerOK(Int_t mTowId, Int_t mTrigId)
 {
-  if (mTrigId == 200001 || mTrigId == 200003 || mTrigId == 200013)
-    {
-      if( mTowId ==    6 || mTowId ==   46 || mTowId ==  124 || mTowId ==  181 || 
-	  mTowId ==  201 || mTowId ==  301 || mTowId ==  304 || mTowId ==  324 || 
-	  mTowId ==  403 || mTowId ==  428 || mTowId ==  582 || mTowId ==  585 || 
-	  mTowId ==  783 || mTowId ==  948 || mTowId == 1041 || mTowId == 1042 || 
-	  mTowId == 1469 || mTowId == 1569 || mTowId == 1722 || mTowId == 1749 || 
-	  mTowId == 1827 || mTowId == 1864 || mTowId == 2004 || mTowId == 2031 ||
-	  mTowId == 2255 || mTowId == 2483 || mTowId == 2505 || mTowId == 2667 || 
-	  mTowId == 2681 || mTowId == 2781 || mTowId == 2783 || mTowId == 2861 ||
-	  mTowId == 2883 || mTowId == 2902 || mTowId == 3083 || mTowId == 3105 || 
-	  mTowId == 3283 || mTowId == 3407 || mTowId == 3671 || mTowId == 3763 ||
-	  mTowId == 3842 || mTowId == 3902 || mTowId == 3963 || mTowId == 4070 || 
-	  mTowId == 4264 || mTowId == 4364 || mTowId == 4483 || mTowId == 4562 ||
-	  mTowId == 4606 || mTowId ==   80 || mTowId ==   95 || mTowId ==  180 || 
-	  mTowId ==  200 || mTowId ==  308 || mTowId ==  359 || mTowId ==  439 ||
-	  mTowId ==  509 || mTowId ==  520 || mTowId ==  580 || mTowId ==  591 || 
-	  mTowId ==  600 || mTowId ==  636 || mTowId ==  640 || mTowId ==  680 ||
-	  mTowId ==  714 || mTowId ==  740 || mTowId ==  775 || mTowId ==  779 || 
-	  mTowId ==  800 || mTowId ==  899 || mTowId ==  915 || mTowId ==  920 ||
-	  mTowId == 1020 || mTowId == 1040 || mTowId == 1130 || mTowId == 1132 || 
-	  mTowId == 1197 || mTowId == 1257 || mTowId == 1294 || mTowId == 1300 ||
-	  mTowId == 1319 || mTowId == 1320 || mTowId == 1340 || mTowId == 1348 || 
-	  mTowId == 1380 || mTowId == 1400 || mTowId == 1460 || mTowId == 1480 ||
-	  mTowId == 1500 || mTowId == 1537 || mTowId == 1600 || mTowId == 1620 || 
-	  mTowId == 1760 || mTowId == 1780 || mTowId == 1800 || mTowId == 1820 ||
-	  mTowId == 1860 || mTowId == 1871 || mTowId == 1899 || mTowId == 1909 || 
-	  mTowId == 2060 || mTowId == 2079 || mTowId == 2200 || mTowId == 2240 ||
-	  mTowId == 2294 || mTowId == 2296 || mTowId == 2398 || mTowId == 2420 || 
-	  mTowId == 2520 || mTowId == 2559 || mTowId == 2560 || mTowId == 2600 ||
-	  mTowId == 2640 || mTowId == 2740 || mTowId == 2760 || mTowId == 2880 || 
-	  mTowId == 2980 || mTowId == 3000 || mTowId == 3180 || mTowId == 3200 ||
-	  mTowId == 3240 || mTowId == 3280 || mTowId == 3359 || mTowId == 3360 || 
-	  mTowId == 3420 || mTowId == 3460 || mTowId == 3480 || mTowId == 3518 ||
-	  mTowId == 3540 || mTowId == 3559 || mTowId == 3560 || mTowId == 3711 || 
-	  mTowId == 3720 || mTowId == 3759 || mTowId == 3760 || mTowId == 3780 ||
-	  mTowId == 3800 || mTowId == 3840 || mTowId == 3880 || mTowId == 4039 || 
-	  mTowId == 4119 || mTowId == 4200 || mTowId == 4220 || mTowId == 4260 ||
-	  mTowId == 4280 || mTowId == 4340 || mTowId == 4380 || mTowId == 4400 || 
-	  mTowId == 4420 || mTowId == 4460 || mTowId == 4480 || mTowId == 4498 ||
-	  mTowId == 4500 || mTowId == 4539 || mTowId == 4540 || mTowId == 4600 || 
-	  mTowId == 4640 || mTowId == 4740)
-	{ 
-	  __DEBUG(9, Form("Reject. Tower ID: %d", mTowId));	    
-	  return kFALSE;
-	}
-      else 
-	{
-	  __DEBUG(9, Form("Accept. Tower ID: %d", mTowId));	    
-	  return kTRUE;
-	}
+  // Orig: MB only!
+  // if (   mTrigId == 200001 || mTrigId == 200003 || mTrigId == 200013){
+  // KK: Fixed, 08/23/15: Include HT triggers
+  if ( mTrigId == 200001 || mTrigId == 200003 || mTrigId == 200013 ||
+       mTrigId == 200620 || mTrigId == 200621 || mTrigId == 200211 || mTrigId == 200212 || mTrigId == 200220 || mTrigId == 200221 || mTrigId == 200221
+       ) {
+    if( mTowId ==    6 || mTowId ==   46 || mTowId ==  124 || mTowId ==  181 || 
+	mTowId ==  201 || mTowId ==  301 || mTowId ==  304 || mTowId ==  324 || 
+	mTowId ==  403 || mTowId ==  428 || mTowId ==  582 || mTowId ==  585 || 
+	mTowId ==  783 || mTowId ==  948 || mTowId == 1041 || mTowId == 1042 || 
+	mTowId == 1469 || mTowId == 1569 || mTowId == 1722 || mTowId == 1749 || 
+	mTowId == 1827 || mTowId == 1864 || mTowId == 2004 || mTowId == 2031 ||
+	mTowId == 2255 || mTowId == 2483 || mTowId == 2505 || mTowId == 2667 || 
+	mTowId == 2681 || mTowId == 2781 || mTowId == 2783 || mTowId == 2861 ||
+	mTowId == 2883 || mTowId == 2902 || mTowId == 3083 || mTowId == 3105 || 
+	mTowId == 3283 || mTowId == 3407 || mTowId == 3671 || mTowId == 3763 ||
+	mTowId == 3842 || mTowId == 3902 || mTowId == 3963 || mTowId == 4070 || 
+	mTowId == 4264 || mTowId == 4364 || mTowId == 4483 || mTowId == 4562 ||
+	mTowId == 4606 || mTowId ==   80 || mTowId ==   95 || mTowId ==  180 || 
+	mTowId ==  200 || mTowId ==  308 || mTowId ==  359 || mTowId ==  439 ||
+	mTowId ==  509 || mTowId ==  520 || mTowId ==  580 || mTowId ==  591 || 
+	mTowId ==  600 || mTowId ==  636 || mTowId ==  640 || mTowId ==  680 ||
+	mTowId ==  714 || mTowId ==  740 || mTowId ==  775 || mTowId ==  779 || 
+	mTowId ==  800 || mTowId ==  899 || mTowId ==  915 || mTowId ==  920 ||
+	mTowId == 1020 || mTowId == 1040 || mTowId == 1130 || mTowId == 1132 || 
+	mTowId == 1197 || mTowId == 1257 || mTowId == 1294 || mTowId == 1300 ||
+	mTowId == 1319 || mTowId == 1320 || mTowId == 1340 || mTowId == 1348 || 
+	mTowId == 1380 || mTowId == 1400 || mTowId == 1460 || mTowId == 1480 ||
+	mTowId == 1500 || mTowId == 1537 || mTowId == 1600 || mTowId == 1620 || 
+	mTowId == 1760 || mTowId == 1780 || mTowId == 1800 || mTowId == 1820 ||
+	mTowId == 1860 || mTowId == 1871 || mTowId == 1899 || mTowId == 1909 || 
+	mTowId == 2060 || mTowId == 2079 || mTowId == 2200 || mTowId == 2240 ||
+	mTowId == 2294 || mTowId == 2296 || mTowId == 2398 || mTowId == 2420 || 
+	mTowId == 2520 || mTowId == 2559 || mTowId == 2560 || mTowId == 2600 ||
+	mTowId == 2640 || mTowId == 2740 || mTowId == 2760 || mTowId == 2880 || 
+	mTowId == 2980 || mTowId == 3000 || mTowId == 3180 || mTowId == 3200 ||
+	mTowId == 3240 || mTowId == 3280 || mTowId == 3359 || mTowId == 3360 || 
+	mTowId == 3420 || mTowId == 3460 || mTowId == 3480 || mTowId == 3518 ||
+	mTowId == 3540 || mTowId == 3559 || mTowId == 3560 || mTowId == 3711 || 
+	mTowId == 3720 || mTowId == 3759 || mTowId == 3760 || mTowId == 3780 ||
+	mTowId == 3800 || mTowId == 3840 || mTowId == 3880 || mTowId == 4039 || 
+	mTowId == 4119 || mTowId == 4200 || mTowId == 4220 || mTowId == 4260 ||
+	mTowId == 4280 || mTowId == 4340 || mTowId == 4380 || mTowId == 4400 || 
+	mTowId == 4420 || mTowId == 4460 || mTowId == 4480 || mTowId == 4498 ||
+	mTowId == 4500 || mTowId == 4539 || mTowId == 4540 || mTowId == 4600 || 
+	mTowId == 4640 || mTowId == 4740) { 
+      __DEBUG(9, Form("Reject. Tower ID: %d", mTowId));	    
+      return kFALSE;
+    } else  {
+      __DEBUG(9, Form("Accept. Tower ID: %d", mTowId));	    
+      return kTRUE;
     }
+  }
   //dAu & pp year8, cuts for new calibration, eta rings 1-19
   else if ( mTrigId==210020 || mTrigId==210500 || mTrigId==210501 || mTrigId==210510 || mTrigId==210511 || mTrigId==210520 || mTrigId==210521 || mTrigId==210541 || mTrigId==220500 || mTrigId==220510 || mTrigId==220520) {
     
