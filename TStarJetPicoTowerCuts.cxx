@@ -353,29 +353,21 @@ Double_t TStarJetPicoTowerCuts::HadronicCorrection(TStarJetPicoTower *mTower,
 						   Double_t frac)
 {
   Double_t Ecorr = mTower->GetEnergy();
-  // check the associated tracks
-  for (Int_t ntrack = 0; ntrack < mTower->GetNAssocTracks(); ntrack++)
-    {
-      Int_t idx = mTower->GetMatchedTrackIndex(ntrack);
-      TStarJetPicoPrimaryTrack *ptrack = mEvent->GetPrimaryTrack(idx);
-      if (trackQA->IsTrackOK(ptrack) == kTRUE)
-	{
-	  Double_t pel2 = 
-	    ptrack->GetPx() * ptrack->GetPx() + 
-	    ptrack->GetPy() * ptrack->GetPy() + 
-	    ptrack->GetPz() * ptrack->GetPz();
-	  
-	  if (TStarJetPicoUtils::IsElectron(mTower, ptrack) == kTRUE)
-	    {
-	      Double_t mel2 = __STARJETPICO_MASS_ELECTRON * __STARJETPICO_MASS_ELECTRON;
-	      Double_t Eel = TMath::Sqrt(pel2 + mel2);
-	      Ecorr -= Eel; 
-	    } // is electron
 
-	  else Ecorr -= frac * TMath::Sqrt(pel2);
-	} // track is OK
-    } // loop over associated tracks
-  
+  // check the associated tracks
+  for (Int_t ntrack = 0; ntrack < mTower->GetNAssocTracks(); ntrack++) {  // is electron
+    Int_t idx = mTower->GetMatchedTrackIndex(ntrack);
+    TStarJetPicoPrimaryTrack *ptrack = mEvent->GetPrimaryTrack(idx);
+
+    if (trackQA->IsTrackOK(ptrack) == kTRUE) {
+      Double_t pel2 = 
+	ptrack->GetPx() * ptrack->GetPx() + 
+	ptrack->GetPy() * ptrack->GetPy() + 
+	ptrack->GetPz() * ptrack->GetPz();
+      
+      Ecorr -= frac * TMath::Sqrt(pel2);
+    } // track is OK
+  } // loop over associated tracks
   return Ecorr;
 }
 
