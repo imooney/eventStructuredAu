@@ -85,11 +85,10 @@ Bool_t TStarJetPicoUtils::IsElectron(TStarJetPicoTower *tower, TStarJetPicoPrima
   // Calling: TStarJetPicoUtils::GetTowerPoverE
 
   if ( 
-(tower->GetSMDClusterE() * tower->GetSMDClusterP() > 4.0) && 
+       (tower->GetSMDClusterE() * tower->GetSMDClusterP() > 4.0) && 
        (tower->GetSMDClusterE() * tower->GetSMDClusterP() < 100) &&
        GetTowerPoverE(tower, track) < 2.0 
-       && (track->GetdEdx() > 3.5e-6 && track->GetdEdx() < 4.2e-6)
-   
+       && (track->GetdEdx() > 3.5e-6 && track->GetdEdx() < 4.2e-6)   
        // && (track->GetdEdx() > 3.0e-6 && track->GetdEdx() < 4.2e-6))
        )
     {      

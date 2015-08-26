@@ -369,8 +369,8 @@ Bool_t TStarJetPicoReader::LoadTowers()
     TStarJetPicoTower *ptower = fEvent->GetTower(ntower);
     Bool_t isElectronCandidate = kFALSE;
         
-    //nick elsey: check if its on the masked lists for hot and dead towers
-    if ( !(fTowerCuts->CheckTowerAgainstLists(ptower)) )      continue;
+    // //nick elsey: check if its on the masked lists for hot and dead towers
+    // if ( !(fTowerCuts->CheckTowerAgainstLists(ptower)) )      continue;
         
     if (fTowerCuts->IsTowerOK(ptower, fEvent) == kTRUE) {
       // nick elsey: first check to see that the tower is in the correct phi region
