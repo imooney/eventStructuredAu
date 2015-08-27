@@ -363,15 +363,15 @@ Bool_t TStarJetPicoReader::LoadTowers()
   
   TStarJetVector part;
   
+  // KK: Initialize high tower
+  Float_t mHighTower=0;
+
   for (Int_t ntower = 0;
        ntower < fEvent->GetHeader()->GetNOfTowers(); 
        ntower++) { 
     TStarJetPicoTower *ptower = fEvent->GetTower(ntower);
     Bool_t isElectronCandidate = kFALSE;
-        
-    // //nick elsey: check if its on the masked lists for hot and dead towers
-    // if ( !(fTowerCuts->CheckTowerAgainstLists(ptower)) )      continue;
-        
+    
     if (fTowerCuts->IsTowerOK(ptower, fEvent) == kTRUE) {
       // nick elsey: first check to see that the tower is in the correct phi region
       if ( phiRange && restrictToInsidePhiRange ) {
@@ -412,7 +412,7 @@ Bool_t TStarJetPicoReader::LoadTowers()
       if (fRejectTowerElectrons == kTRUE && isElectronCandidate == kTRUE)
 	continue;
 
-      // correct OR not the MIP
+      // hadronic correction
       Double_t correctedEnergy = ptower->GetEnergy();
       if (fApplyMIPCorrection == kTRUE) {
 	correctedEnergy = fTowerCuts->TowerEnergyMipCorr(ptower);
@@ -422,7 +422,7 @@ Bool_t TStarJetPicoReader::LoadTowers()
 							 fTrackCuts,
 							 fFractionHadronicCorrection);
       }
-	  
+      
       // fill the container
       if (correctedEnergy > 0)
 	{
@@ -431,7 +431,10 @@ Bool_t TStarJetPicoReader::LoadTowers()
 	  if ( !(fEventCuts->IsHighestEtOK( mEt )) ) {
 	    return kFALSE;
 	  }
-	      
+	  
+	  // KK: Update highest tower
+	  if ( mEt > mHighTower ) mHighTower = mEt;
+
 	  part.SetPtEtaPhiM(mEt, ptower->GetEtaCorrected(), ptower->GetPhiCorrected(), 0);
 	  part.SetType(TStarJetVector::_TOWER);
 	  part.SetCharge(TStarJetVector::_NEUTRAL);	      
@@ -444,6 +447,12 @@ Bool_t TStarJetPicoReader::LoadTowers()
     } // tower QA
   }
 
+  // KK: soft high tower trigger
+  if ( !(fEventCuts->IsHighTowerOk( mHighTower )) ) {
+    return kFALSE;
+  }
+  
+  
   return kTRUE;
 }
 

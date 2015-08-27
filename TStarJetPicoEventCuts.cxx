@@ -32,7 +32,8 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts()
   , fPVRankingCut(-10.) 
   , fFlagPVRankingCut(kFALSE) //reasonable value of PV Ranking Cut depends on PV finder & dataset used -> off by default!
   , fMaxEventPt ( 99999 )
-  , fMaxEventEt ( 99999 ) 
+  , fMaxEventEt ( 99999 )
+  , fMinEventEt( -1 ) // software HT trigger AFTER hadronic correction.
 {
   __DEBUG(2, "Creating event cuts with default values.");
 }
@@ -52,6 +53,8 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t)
   , fFlagPVRankingCut(t.fFlagPVRankingCut)
   , fMaxEventPt( t.fMaxEventPt )
   , fMaxEventEt( t.fMaxEventEt )
+  , fMinEventEt( t.fMinEventEt )
+
 {
   __DEBUG(2, "Copy event cuts.");  
 }
@@ -504,10 +507,22 @@ Bool_t TStarJetPicoEventCuts::IsHighestEtOK( Float_t mEt )
     __DEBUG(1,Form("Reject. %f>%f",mEt,fMaxEventEt));
     return kFALSE;
   }
-
+  
   __DEBUG(6,Form("Accept. %f<%f",mEt,fMaxEventEt));
   return kTRUE;
 }
+
+Bool_t TStarJetPicoEventCuts::IsHighTowerOk( Float_t mEt )
+{
+  if ( fMinEventEt > 0 && mEt<fMinEventEt ) {
+    __DEBUG(1,Form("Reject. High tower %f<%f",mEt,fMinEventEt));
+    return kFALSE;
+  }
+
+  __DEBUG(6,Form("Accept. High tower %f>%f",mEt,fMinEventEt));
+  return kTRUE;
+}
+
 
 Bool_t TStarJetPicoEventCuts::SetReferenceCentralityCut(Int_t min, Int_t max)
 {

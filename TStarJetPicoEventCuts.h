@@ -32,6 +32,7 @@ class TStarJetPicoEventCuts : public TObject
   // Added by Kolja Kauder to reject events with unphysical tracks or towers
   virtual Bool_t IsHighestPtOK( Float_t mPt );  // kTRUE if OK; kFALSE otherwise
   virtual Bool_t IsHighestEtOK( Float_t mEt );  // kTRUE if OK; kFALSE otherwise
+  virtual Bool_t IsHighTowerOk( Float_t mEt );  // kTRUE if OK; kFALSE otherwise
 
   virtual void   SetTriggerSelection(const char *str) {fTrigSel = str;}
   virtual void   SetVertexZCut(Float_t val) {fVzCut = val;}
@@ -64,7 +65,8 @@ class TStarJetPicoEventCuts : public TObject
 
   virtual void SetMaxEventPtCut( Float_t val)     { fMaxEventPt = val;}
   virtual void SetMaxEventEtCut( Float_t val)     { fMaxEventEt = val;}
-    
+  virtual void SetMinEventEtCut( Float_t val)     { fMinEventEt = val;}
+      
   virtual Int_t  GetReferenceMultiplicity(TStarJetPicoEvent *mEv);
 
   TString GetTriggerSelection() {return fTrigSel;}
@@ -78,6 +80,7 @@ class TStarJetPicoEventCuts : public TObject
 
   Float_t GetMaxEventPtCut()     {return fMaxEventPt;}
   Float_t GetMaxEventEtCut()     {return fMaxEventEt;}
+  Float_t GetMinEventEtCut()     {return fMinEventEt;}
     
   Int_t   GetRefCentMin()       {return fRefCentCutMin;}
   Int_t   GetRefCentMax()       {return fRefCentCutMax;}
@@ -99,6 +102,7 @@ class TStarJetPicoEventCuts : public TObject
   
   Float_t fMaxEventPt;
   Float_t fMaxEventEt;
+  Float_t fMinEventEt;
   
   ClassDef(TStarJetPicoEventCuts, 3)
 };
