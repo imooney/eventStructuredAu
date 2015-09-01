@@ -35,7 +35,7 @@ endif
 OBJS          = $(MODO)
 
 # # suppress warnings during dictionary creation
-CXXFLAGS		+= -Wno-return-type-c-linkage
+CXXFLAGS		+= -Wno-return-type-c-linkage -Wno-undefined-bool-conversion
 
 
 .SUFFIXES: .$(SrcSuf) .$(ObjSuf) .$(DllSuf)
