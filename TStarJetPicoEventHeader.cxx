@@ -7,6 +7,7 @@ ClassImp(TStarJetPicoEventHeader)
 
 #define __INITIAL_NUMBER_OF_TID 1
 
+// -----------------------------------------------------------------------------
 TStarJetPicoEventHeader::TStarJetPicoEventHeader()
   : TObject()
   , fEventId(0)
@@ -59,6 +60,7 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader()
   fTriggerIdArray.Reset(0);
 }
 
+// -----------------------------------------------------------------------------
 TStarJetPicoEventHeader::TStarJetPicoEventHeader(const TStarJetPicoEventHeader &t)
   : TObject(t)
   , fEventId(t.fEventId)
@@ -111,11 +113,13 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader(const TStarJetPicoEventHeader &
   ;
 }
 
+// -----------------------------------------------------------------------------
 TStarJetPicoEventHeader::~TStarJetPicoEventHeader()
 {
   ;
 }
 
+// -----------------------------------------------------------------------------
 void TStarJetPicoEventHeader::Clear(Option_t */*Option*/)
 {
   fEventId = 0;              
@@ -169,6 +173,7 @@ void TStarJetPicoEventHeader::Clear(Option_t */*Option*/)
   fnumberOfVpdWestHits = 0;
 }
 
+// -----------------------------------------------------------------------------
 void TStarJetPicoEventHeader::AddTriggerId(Int_t id)
 {
   //
@@ -188,3 +193,33 @@ void TStarJetPicoEventHeader::AddTriggerId(Int_t id)
       AddTriggerId(id);
     }
 }
+
+
+// -----------------------------------------------------------------------------
+/// KK: Selects Refmult, GRefmult, CorRefmult as appropriate
+Double_t TStarJetPicoEventHeader::GetProperReferenceMultiplicity(){
+  // There are multiple ways to do this. 
+  // 1 - select based on trigger ID
+  // 2 - select based on trigger selection string (that's pretty bad)
+  // 3 - select based on RunId. That's pretty good, but I prefer
+  // 4 - select assuming that RefmultCorr is better than gRefmult is better than refmult.
+  //     Let's use 4.
+  
+  Double_t ret; 
+  ret=GetCorrectedReferenceMultiplicity();
+  if ( fabs(ret)>1e-6 ){
+
+    return ret;
+  }
+
+  ret=GetGReferenceMultiplicity();
+  if ( fabs(ret)>1e-6 ) {
+    __DEBUG(1, "Using GRefMult");
+    return ret;
+  }
+ 
+  __DEBUG(1, "Using RefMult");
+  return GetReferenceMultiplicity();
+  
+}
+

@@ -53,6 +53,11 @@ TStarJetPicoReader::TStarJetPicoReader()
   //
   // Default constructor
   //
+  
+  // DEBUG histos
+  HadronicResult = new TH1D("HadronicResult","Tower Energy after hadronic correction", 100, -10, 10);
+  HadronicResult->Sumw2();
+  
 }
 
 TStarJetPicoReader::~TStarJetPicoReader()
@@ -72,6 +77,11 @@ TStarJetPicoReader::~TStarJetPicoReader()
 
   delete fTowerCuts;
   fTowerCuts = 0;
+
+  // DEBUG histos
+  delete HadronicResult;
+  HadronicResult=0;
+
 }
 
 
@@ -125,7 +135,7 @@ void TStarJetPicoReader::SetFractionHadronicCorrection(Double_t val)
   if (fFractionHadronicCorrection > 0.0 && fFractionHadronicCorrection <= 1.0)
     {
       SetApplyFractionHadronicCorrection(kTRUE);
-      __INFO(Form("FractionHadronicCorrection %1.3f", fFractionHadronicCorrection));	    
+      __INFO(Form("FractionHadronicCorrection %1.3f", fFractionHadronicCorrection));
     }
   else
     {
@@ -394,7 +404,8 @@ Bool_t TStarJetPicoReader::LoadTowers()
 	      TStarJetVector *matchedTrack = TStarJetPicoReader::FindVectorByKey(key);
 	      if (matchedTrack == 0)
 		{
-		  __ERROR(Form("For some reason this track was not accepted! Key: %d", key));
+		  // __ERROR(Form("For some reason this track was not accepted! Key: %d", key));
+		  __DEBUG(9,Form("For some reason this track was not accepted! Key: %d", key));
 		  continue;
 		}
 	      matchedTrack->SetType(TStarJetVector::_MATCHED);
@@ -422,28 +433,32 @@ Bool_t TStarJetPicoReader::LoadTowers()
 							 fTrackCuts,
 							 fFractionHadronicCorrection);
       }
-      
+
+      // DEBUG
+      HadronicResult->Fill(correctedEnergy);
+
       // fill the container
-      if (correctedEnergy > 0)
-	{
-	  Double_t mEt = correctedEnergy / TMath::CosH(ptower->GetEtaCorrected());
-	  // KK: Now that the tower has passed quality control, check whether it's too high.
-	  if ( !(fEventCuts->IsHighestEtOK( mEt )) ) {
-	    return kFALSE;
-	  }
-	  
-	  // KK: Update highest tower
-	  if ( mEt > mHighTower ) mHighTower = mEt;
-
-	  part.SetPtEtaPhiM(mEt, ptower->GetEtaCorrected(), ptower->GetPhiCorrected(), 0);
-	  part.SetType(TStarJetVector::_TOWER);
-	  part.SetCharge(TStarJetVector::_NEUTRAL);	      
-	  part.SetPID(fTowerCuts->DoPID(ptower)); // not known yet...
-	  part.SetTowerID(ptower->GetId());
-
-	  fOutputContainer->Add(&part);
-	  fSelectedTowers->AddLast(ptower);
+      if (correctedEnergy > 0) {
+	Double_t mEt = correctedEnergy / TMath::CosH(ptower->GetEtaCorrected());
+	// KK: Now that the tower has passed quality control, check whether it's too high.
+	if ( !(fEventCuts->IsHighestEtOK( mEt )) ) {
+	  return kFALSE;
 	}
+	
+	// KK: Update highest tower
+	if ( mEt > mHighTower ) mHighTower = mEt;
+	
+	part.SetPtEtaPhiM(mEt, ptower->GetEtaCorrected(), ptower->GetPhiCorrected(), 0);
+	part.SetType(TStarJetVector::_TOWER);
+	part.SetCharge(TStarJetVector::_NEUTRAL);	      
+	part.SetPID(fTowerCuts->DoPID(ptower)); // not known yet...
+	part.SetTowerID(ptower->GetId());
+	
+	fOutputContainer->Add(&part);
+	fSelectedTowers->AddLast(ptower);
+      } else {
+	__DEBUG(9, Form("Reject Tower, correctedEnergy = %1.3f", correctedEnergy));
+      }
     } // tower QA
   }
 

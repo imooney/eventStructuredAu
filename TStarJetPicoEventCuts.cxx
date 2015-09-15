@@ -62,7 +62,7 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t)
 Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 {
   __DEBUG(2, Form("mTrigId = %d TrigSel = %s", mTrigId, fTrigSel.Data()));
-
+  
   if (fTrigSel.Contains("pp"))
     {
       // include different pp triggers, MB,HT and JP ...
@@ -85,6 +85,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 		}
 	      else 
 		{
+		  __DEBUG(2, "Reject ppHT trigger.");
 		  return kFALSE;
 		}
 	    }
@@ -103,12 +104,16 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 		  __DEBUG(2, "JP Trigger p+p events run 9 selected");
 		  return kTRUE;
 		}
-		else
+		else 
+		  {
+		  __DEBUG(2, "Reject ppJP trigger.");
 		  return kFALSE;
+		  }
 	      }
 	}      
       else
 	{
+	  __DEBUG(2, "Reject pp trigger.");
 	  return kFALSE;
 	}
     } //pp selection
@@ -136,35 +141,43 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 	}
       else
 	{
+	  __DEBUG(2, "Reject HT trigger for Au+Au.");
 	  return kFALSE;	
 	}
     } // auau HT
 
    if (fTrigSel.Contains("MB") && !fTrigSel.Contains("pp"))
-    {
+     {
       if (mTrigId==200001 || mTrigId==200003 || mTrigId==200013)
 	{
-	  __DEBUG(2, "MB trigger for Au+Au ok.");
+	  __DEBUG(2, "Accept MB trigger for Au+Au.");
 	  return kTRUE;
+	}
+      else if (mTrigId==200001 || mTrigId==200003 || mTrigId==200013)
+	{
+	  __DEBUG(2, "Accept MB trigger for Au+Au run 11.");
+	  return kTRUE;	  
 	}
       else
 	{
+	  __DEBUG(2, "Reject MB trigger for Au+Au.");
 	  return kFALSE;
 	}
-    } // auau mb
-
+     } // auau mb
+   
    if (fTrigSel.Contains("wide") && !fTrigSel.Contains("pp"))
-    {
-      if (mTrigId==200000 || mTrigId==200002 || mTrigId==200012)
-	{
-	  __DEBUG(2, "MB trigger for Au+Au ok.");
+     {
+       if (mTrigId==320000 || mTrigId==320001 || mTrigId==320011 || mTrigId==320021)
+	 {
+	   __DEBUG(1, "Accept MB trigger for Au+Au.");
 	  return kTRUE;
-	}
-      else
-	{
-	  return kFALSE;
-	}
-    } // auau mb, wide vz cut
+	 } 
+       else
+	 {
+	   __DEBUG(2, "Reject MB trigger for Au+Au.");
+	   return kFALSE;
+	 }
+     } // auau mb, wide vz cut
    
    
    // dAu year 2008, triggersel options: dAu_mb,dAu_ht_all,dAu_ht0,dAu_ht1,dAu_ht2,dAu_ht4
@@ -269,6 +282,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 
 Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
 {
+  // std::cerr << "Hello world" << std::endl;
   Bool_t retval = kFALSE;
   if (fTrigSel.Contains("All"))
     {
@@ -276,9 +290,11 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
       return kTRUE;
     }
 
+  // std::cerr << "Testing " << mEv->GetHeader()->GetNOfTriggerIds() << " IDs" << std::endl;
   for (Int_t id = 0; id < mEv->GetHeader()->GetNOfTriggerIds(); id++)
     {
       Int_t TrigId = mEv->GetHeader()->GetTriggerId(id);
+      // std::cerr << "testing" << TrigId << std::endl;
       if ( IsTriggerIdOK(TrigId) == kTRUE )
 	{
 	  retval = kTRUE;
@@ -307,6 +323,9 @@ if(TMath::Abs(Vz-VpdVz)<fVzDiffCut)
 
 Int_t TStarJetPicoEventCuts::GetReferenceMultiplicity(TStarJetPicoEvent *mEv)
 {
+  __ERROR ( "Deprecated, don't use");
+  throw (-1);
+
   Int_t RefMult = mEv->GetHeader()->GetReferenceMultiplicity();
   if ((fTrigSel.Contains("HT") || fTrigSel.Contains("MB")) &&
       (!fTrigSel.Contains("pp")) )
@@ -318,40 +337,43 @@ Int_t TStarJetPicoEventCuts::GetReferenceMultiplicity(TStarJetPicoEvent *mEv)
   return RefMult;
 }
 
-Bool_t TStarJetPicoEventCuts::IsRefMultOK(TStarJetPicoEvent *mEv, TChain *fInputTree)
+Bool_t TStarJetPicoEventCuts::IsRefMultOK(TStarJetPicoEvent *mEv )
 {
-  Int_t RefMult = mEv->GetHeader()->GetReferenceMultiplicity();
-  Int_t run     = mEv->GetHeader()->GetRunId();
-  if(run < 11002120 || run > 11147025)//exclude Run 10 AuAu all energies
-   if ((fTrigSel.Contains("HT") || fTrigSel.Contains("MB")) &&
-       (!fTrigSel.Contains("pp")) )
-     {
-       __DEBUG(1, Form("Switching to GRefMult cut for AuAu data. Trigger is %s",
-		      fTrigSel.Data()));
-       RefMult = mEv->GetHeader()->GetGReferenceMultiplicity();
-     }
+  // KK: Simplified
+  Double_t RefMult = mEv->GetHeader()->GetProperReferenceMultiplicity();
+
+  // Int_t RefMult = mEv->GetHeader()->GetReferenceMultiplicity();
+  // Int_t run     = mEv->GetHeader()->GetRunId();
+  // if(run < 11002120 || run > 11147025)//exclude Run 10 AuAu all energies
+  //  if ((fTrigSel.Contains("HT") || fTrigSel.Contains("MB")) &&
+  //      (!fTrigSel.Contains("pp")) )
+  //    {
+  //      __DEBUG(1, Form("Switching to GRefMult cut for AuAu data. Trigger is %s",
+  // 		      fTrigSel.Data()));
+  //      RefMult = mEv->GetHeader()->GetGReferenceMultiplicity();
+  //    }
     
-    TString triggerSel = fTrigSel;
-    triggerSel.ToUpper();
+  //   TString triggerSel = fTrigSel;
+  //   triggerSel.ToUpper();
     
-    //nick elsey: overriding this for run 11: using CorRefMult if its present
-    if ( ( ( (run-run%1000000)/1000000 ) == 12 ) && fInputTree->FindLeaf("fEventHeader.fCorRefMult") ) {
-        if ( triggerSel.Contains("HT") || triggerSel.Contains("MB") || triggerSel.Contains("ALL") ) {
-            RefMult = mEv->GetHeader()->GetCorrectedReferenceMultiplicity();
-        __DEBUG(1, Form("Switching to CorRefMult cut for y11 data. Trigger is %s",
-                        triggerSel.Data()));
-        }
-    }
+  //   //nick elsey: overriding this for run 11: using CorRefMult if its present
+  //   if ( ( ( (run-run%1000000)/1000000 ) == 12 ) && fInputTree->FindLeaf("fEventHeader.fCorRefMult") ) {
+  //       if ( triggerSel.Contains("HT") || triggerSel.Contains("MB") || triggerSel.Contains("ALL") ) {
+  //           RefMult = mEv->GetHeader()->GetCorrectedReferenceMultiplicity();
+  //       __DEBUG(1, Form("Switching to CorRefMult cut for y11 data. Trigger is %s",
+  //                       triggerSel.Data()));
+  //       }
+  //   }
 
   if (( RefMult > fRefMultCutMin) &&
       ( RefMult < fRefMultCutMax) )
     {
-      __DEBUG(1, Form("Accept. %d < %d < %d", 
+      __DEBUG(1, Form("Accept. %d < %.1f < %d", 
 		      fRefMultCutMin, RefMult, fRefMultCutMax));
       return kTRUE;
     }  
   
-  __DEBUG(1, Form("Reject. %d < %d < %d", 
+  __DEBUG(1, Form("Reject. %d < %.1f < %d", 
 		  fRefMultCutMin, RefMult, fRefMultCutMax));
   return kFALSE;  
 }
@@ -368,9 +390,9 @@ Bool_t TStarJetPicoEventCuts::IsRefCentOK(TStarJetPicoEvent *mEv, TChain *fInput
     }
     Int_t refCent = mEv->GetHeader()->GetReferenceCentrality();
     if ( (refCent >= fRefCentCutMin) && (refCent <= fRefCentCutMax) ) {
-        __DEBUG(1, Form("Accept. %d < %d < %d",
-                        fRefCentCutMin, refCent, fRefCentCutMax));
-        return kTRUE;
+      __DEBUG(1, Form("Accept. %d < %d < %d",
+		      fRefCentCutMin, refCent, fRefCentCutMax));
+      return kTRUE;
     }
     __DEBUG(1, Form("Reject. %d < %d < %d",
                     fRefCentCutMin, refCent, fRefCentCutMax));
@@ -472,7 +494,7 @@ Bool_t TStarJetPicoEventCuts::CheckEvent(TStarJetPicoEvent *mEv, TChain *fInputT
 Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv, TChain *fInputTree)
 {
   Bool_t retval;
-  retval = (IsRefMultOK(mEv, fInputTree) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
+  retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
   
   //cuts for dAu2008
   Int_t run = mEv->GetHeader()->GetRunId();

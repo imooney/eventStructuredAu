@@ -18,6 +18,10 @@ class TStarJetPicoEventHeader : public TObject
 
   Int_t   GetEventId()                   const {return fEventId;}
   Int_t   GetRunId()                     const {return fRunId;}
+
+  /// KK: Selects Refmult, GRefmult, CorRefmult as appropriate
+  Double_t   GetProperReferenceMultiplicity(); 
+
   Int_t   GetReferenceMultiplicity()     const {return fRefMult;}
   Int_t   GetGReferenceMultiplicity()    const {return fGRefMult;}
   Int_t   GetReferenceCentrality()     const {return fRefCent;}

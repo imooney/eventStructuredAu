@@ -2,6 +2,7 @@
 #define __TSTARJETPICOREADER_HH
 
 #include <TObject.h>
+#include <TH1.h>
 #include <TString.h>
 #include "TStarJetVectorContainer.h"
 
@@ -48,6 +49,8 @@ class TStarJetPicoReader : public TStarJetPicoReaderBase
   void AddMaskedRun(Int_t Id);
   void AddMaskedRuns(std::vector<Int_t> Ids);
 
+  TH1D* GetHadronicResult() { return HadronicResult; }; // note that you may have to clone this guy cause it'll be deleted.
+
  protected:
   
   virtual Bool_t LoadEvent();
@@ -68,6 +71,11 @@ class TStarJetPicoReader : public TStarJetPicoReaderBase
   Bool_t   fApplyFractionHadronicCorrection; // Another type of charge particles energy depostion in EMC.
   Double_t fFractionHadronicCorrection; // Fraction of momentum of the TPC track to be subtracted from EMC tower.
   
+  // DEBUG
+  /// To count the number of rejected towers
+  TH1D* HadronicResult;
+  
+
   ClassDef(TStarJetPicoReader, 1)
 };
 

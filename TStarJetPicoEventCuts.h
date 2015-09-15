@@ -19,7 +19,7 @@ class TStarJetPicoEventCuts : public TObject
 
   virtual Bool_t IsTriggerIdOK(Int_t mTrigId);
   virtual Bool_t IsTriggerIdOK(TStarJetPicoEvent *mEv);
-  virtual Bool_t IsRefMultOK(TStarJetPicoEvent *mEv, TChain *fInputTree);
+  virtual Bool_t IsRefMultOK(TStarJetPicoEvent *mEv);
   virtual Bool_t IsRefCentOK(TStarJetPicoEvent *mEv, TChain *fInputTree);
   virtual Bool_t IsVertexZOK(TStarJetPicoEvent *mEv);
   virtual Bool_t IsVertexZDiffOK(TStarJetPicoEvent *mEv);
