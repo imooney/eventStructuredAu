@@ -2,6 +2,7 @@
 
 #include "TStarJetPicoDefinitions.h"
 #include <TString.h>
+#include <math.h>
 
 ClassImp(TStarJetPicoEventHeader)
 
