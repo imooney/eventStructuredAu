@@ -10,6 +10,7 @@ class TStarJetVector : public TLorentzVector
  public:
   TStarJetVector();  
   TStarJetVector(const TStarJetVector &v);  
+  TStarJetVector(const TLorentzVector &lv);
   virtual ~TStarJetVector();
 
   Double_t        GetFeatureD(Int_t i) const {return fFeaturesD[i];}
@@ -72,7 +73,8 @@ class TStarJetVector : public TLorentzVector
       _CHARGE = 2,  // integer charge : usually _NEUTRAL or _CHARGED
       _TYPE = 3,    // data? pythia? etc
       _KEY = 4,     // used with data
-      _STATUS = 4   // used with pythia
+      _STATUS = 4,  // used with pythia
+      _MATCH = 5,   // KK: use to match link to a different particle
     };
 
   // markers - bit mode 
@@ -116,6 +118,10 @@ class TStarJetVector : public TLorentzVector
   Bool_t          IsTrigger() {return fTrigger;}
   void            SetTriggerStatus(Bool_t value) {fTrigger = value;}
 
+  // KK
+  void            SetMatch(Int_t id) {fFeaturesI[_MATCH] = id;}
+  Int_t           GetMatch() const {return fFeaturesI[_MATCH];}
+
   Bool_t          IsCharged()
   {
     if (fFeaturesI[_CHARGE] == _NEUTRAL) 
@@ -140,10 +146,8 @@ class TStarJetVector : public TLorentzVector
   // duplication when using TLorentzVector! - but ok.
   void            SetPicoMass(Double_t val) {fFeaturesD[_MASS] = val;}
   Double_t        GetPicoMass() {return fFeaturesD[_MASS];}
- protected:
 
  protected:
-
   TArrayD fFeaturesD;
   TArrayI fFeaturesI;
   Bool_t  fTrigger;
