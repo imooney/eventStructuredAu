@@ -272,22 +272,6 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
   if ( MaxEventPtCut < 99999 && MaxEventPtCut > MaxPtCut){
     __WARNING(Form("MaxEventPtCut %f will not fire because MaxPtCut is %f.", MaxEventPtCut, MaxPtCut));
   }
-    
-  //nick elsey: check to see if there is a phi range restriction
-  Double_t phiMin = fTrackCuts->GetMinPhiCut();
-  Double_t phiMax = fTrackCuts->GetMaxPhiCut();
-  Bool_t phiRange = kFALSE;
-  Bool_t restrictToInsidePhiRange = kTRUE;
-    
-  if ( !(phiMin == 0.0 && phiMax == 0.0) )
-    phiRange = kTRUE;
-  if ( phiMin > phiMax ) {
-    phiRange = kTRUE;
-    restrictToInsidePhiRange = kFALSE;
-    Double_t temporary = phiMin;
-    phiMin = phiMax;
-    phiMax = temporary;
-  }
 
   TStarJetVector part;
   for (Int_t ntrack = 0; 
@@ -295,16 +279,6 @@ Bool_t TStarJetPicoReader::LoadTracks(TArrayI *trackIdsToRemove)
        ntrack++)
     {      
       TStarJetPicoPrimaryTrack *ptrack = fEvent->GetPrimaryTrack(ntrack);
-        
-      // nick elsey: first check for phi resrictions
-      if ( phiRange && restrictToInsidePhiRange ) {
-        if ( phiMin > ptrack->GetPhi() || phiMax < ptrack->GetPhi() )
-	  continue;
-      }
-      else if ( phiRange && !restrictToInsidePhiRange ) {
-        if ( phiMin < ptrack->GetPhi() && phiMax > ptrack->GetPhi() )
-	  continue;
-      }
 
       // check if track taken by V0 - if yes skip it here
       if (IsKeyInArray(ptrack->GetKey(), trackIdsToRemove) == kTRUE)
@@ -355,21 +329,6 @@ Bool_t TStarJetPicoReader::LoadTowers()
   if ( MaxEventEtCut < 99999 && MaxEventEtCut > MaxEtCut){
     __WARNING(Form("MaxEventEtCut %f will not fire because MaxEtCut is %f.", MaxEventEtCut, MaxEtCut));
   }
-    
-  //nick elsey: check to see if there is a phi range restriction
-  Double_t phiMin = fTowerCuts->GetMinPhiCut();
-  Double_t phiMax = fTowerCuts->GetMaxPhiCut();
-  Bool_t phiRange = kFALSE;
-  Bool_t restrictToInsidePhiRange = kTRUE;
-    
-  if ( !(phiMin == 0.0 && phiMax == 0.0) )    phiRange = kTRUE;
-  if ( phiMin > phiMax ) {
-    phiRange = kTRUE;
-    restrictToInsidePhiRange = kFALSE;
-    Double_t temporary = phiMin;
-    phiMin = phiMax;
-    phiMax = temporary;
-  }
   
   TStarJetVector part;
   
@@ -383,15 +342,6 @@ Bool_t TStarJetPicoReader::LoadTowers()
     Bool_t isElectronCandidate = kFALSE;
     
     if (fTowerCuts->IsTowerOK(ptower, fEvent) == kTRUE) {
-      // nick elsey: first check to see that the tower is in the correct phi region
-      if ( phiRange && restrictToInsidePhiRange ) {
-	if ( phiMin > ptower->GetPhi() || phiMax < ptower->GetPhi() )
-	  continue;
-      }
-      else if ( phiRange && !restrictToInsidePhiRange ) {
-	if ( phiMin < ptower->GetPhi() && phiMax > ptower->GetPhi() )
-	  continue;
-      }
           
       // check the associated tracks
       for (Int_t ntrack = 0; ntrack < ptower->GetNAssocTracks(); ntrack++)
