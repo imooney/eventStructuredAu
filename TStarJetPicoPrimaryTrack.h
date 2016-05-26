@@ -27,6 +27,7 @@ class TStarJetPicoPrimaryTrack : public TObject
   Float_t GetPhi()           const {return TMath::ATan2(fPy,fPx);} 
   Float_t GetDCA()           const {return fDCA;} 
   Float_t GetdEdx()          const {return fdEdx;} 
+  Float_t GetdEdxPoints()          const {return fdEdxPoints;} 
   
   Float_t GetNsigmaPion()    const {return fNsigmaPion;}
   Float_t GetNsigmaKaon()    const {return fNsigmaKaon;}
@@ -41,6 +42,8 @@ class TStarJetPicoPrimaryTrack : public TObject
   Float_t GetChi2PV()        const {return fChi2PV;}
 
   Int_t   GetFlag()          const {return fFlag;}
+  Bool_t   GetBemcMatchFlag()          const {return fBemcMatchFlag;}
+  Bool_t   GetTofMatchFlag()          const {return fTofMatchFlag;}
 
   Float_t GetTofTime()       const {return fTofTime;}
   Float_t GetTofBeta()       const {return fTofBeta;}
@@ -59,6 +62,7 @@ class TStarJetPicoPrimaryTrack : public TObject
   
   void SetDCA(Float_t val)           {fDCA = val;} 
   void SetdEdx(Float_t val)          {fdEdx = val;} 
+  void SetdEdxPoints(Float_t val)          {fdEdxPoints = val;} 
   
   void SetNsigmaPion(Float_t val)    {fNsigmaPion = val;}
   void SetNsigmaKaon(Float_t val)    {fNsigmaKaon = val;}
@@ -73,6 +77,8 @@ class TStarJetPicoPrimaryTrack : public TObject
   void SetChi2PV(Float_t val)        {fChi2PV = val;}
 
   void SetFlag(Int_t val) {fFlag = val;}
+  void SetBemcMatchFlag(Bool_t val)          { fBemcMatchFlag = val;}
+  void SetTofMatchFlag(Bool_t val)          { fTofMatchFlag = val;}
 
   void SetTofTime(Float_t val)       {fTofTime = val;}
   void SetTofBeta(Float_t val)       {fTofBeta = val;}
@@ -90,6 +96,7 @@ class TStarJetPicoPrimaryTrack : public TObject
   Float_t         fPz;          // was PrimPz[2056];   //[nPrimTrks] 	     
   Float_t         fDCA;         // was PrimDca[2056];   //[nPrimTrks] 	       
   Float_t         fdEdx;        // was PrimDedx[2056];   //[nPrimTrks] 	       
+  Float_t         fdEdxPoints;        //    //[nPrimTrks] 	       
   Float_t         fNsigmaPion;  // was PrimNsigmaPi[2056];   //[nPrimTrks]     
   Float_t         fNsigmaKaon;  // was PrimNsigmaKaon[2056];   //[nPrimTrks]   
   Float_t         fNsigmaProton;// was PrimNsigmaProton[2056];   //[nPrimTrks]
@@ -103,6 +110,8 @@ class TStarJetPicoPrimaryTrack : public TObject
   Float_t         fChi2PV;  // from StMuTrack::chi2z - it's extra chi2 when Primary Vertex is included into the fit, NOT chi2 in z direction!!
 
   Int_t           fFlag;
+  Bool_t           fBemcMatchFlag;
+  Bool_t           fTofMatchFlag;
 
   Float_t        fTofTime;
   Float_t        fTofBeta;
