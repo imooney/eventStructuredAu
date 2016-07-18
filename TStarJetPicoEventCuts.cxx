@@ -61,6 +61,7 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t)
 
 Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 {
+
   __DEBUG(2, Form("mTrigId = %d TrigSel = %s", mTrigId, fTrigSel.Data()));
   
   if (fTrigSel.Contains("pp"))
@@ -284,7 +285,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
 {
   // std::cerr << "Hello world" << std::endl;
   Bool_t retval = kFALSE;
-  if (fTrigSel.Contains("All"))
+  if (fTrigSel.Contains("All") || fTrigSel.Contains("all") )
     {
       __DEBUG(2, "All events taken, no Trigger selection"); 
       return kTRUE;
@@ -302,6 +303,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
 	}
     }
 
+  __DEBUG(1, Form("Reject. No suitable trigger.") );
   return retval;
 }
 
@@ -494,6 +496,7 @@ Bool_t TStarJetPicoEventCuts::CheckEvent(TStarJetPicoEvent *mEv, TChain *fInputT
 Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv, TChain *fInputTree)
 {
   Bool_t retval;
+  // std::cout << "IsTriggerIdOK(mEv) = " << IsTriggerIdOK(mEv) << std::endl;
   retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
   
   //cuts for dAu2008
