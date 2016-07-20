@@ -39,6 +39,7 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader()
   , fCTBmult(0)
   , fMeanDip(0)
   , fRank(0)
+  , fVertID(0)
   , fNOfVertices(0)   
   , fNOfTrigObjs(0) 
   , fDSMInput(0)
@@ -92,6 +93,7 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader(const TStarJetPicoEventHeader &
   , fCTBmult(t.fCTBmult)
   , fMeanDip(t.fMeanDip)
   , fRank(t.fRank)
+  , fVertID(t.fVertID)
   , fNOfVertices(t.fNOfVertices) 
   , fNOfTrigObjs(t.fNOfTrigObjs)  
   , fDSMInput(t.fDSMInput)
@@ -152,7 +154,8 @@ void TStarJetPicoEventHeader::Clear(Option_t */*Option*/)
   fvpdVz = -999.;
   fCTBmult = 0;              
   fMeanDip = 0;              
-  fRank = 0;                 
+  fRank = 0;
+  fVertID = 0;                 
   fNOfVertices = 0;          
   fNOfTrigObjs = 0;
   fDSMInput = 0;

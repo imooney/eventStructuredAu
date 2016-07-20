@@ -119,6 +119,8 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 	}
     } //pp selection
   
+   
+
   if (fTrigSel.Contains("HT") && !fTrigSel.Contains("pp"))
     {
       if (mTrigId==200620 || mTrigId==200621 || mTrigId==200211 || 
@@ -140,7 +142,15 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 	  __DEBUG(2, "HT Trigger for Au+Au  run 11 ok");
 	  return kTRUE;
 	}
-      else
+        else if (mTrigId==450201 || mTrigId==450211 || // HT1*VPDMB-30
+		 mTrigId==450202 || mTrigId==450212 || // HT2*VPDMB-30
+		 mTrigId==450203 || mTrigId==450213 )  // HT3*VPDMB-30
+	{
+	  __DEBUG(2, "HT1, HT2, HT3, Trigger for Au+Au  run 14 ok");
+	  return kTRUE;
+	}
+
+	else
 	{
 	  __DEBUG(2, "Reject HT trigger for Au+Au.");
 	  return kFALSE;	
@@ -277,13 +287,12 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
     }   
 
    __WARNING(Form("Unrecognized trigger selection! %s", fTrigSel.Data()));
-
+   
    return kFALSE;
 }
 
 Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
 {
-  // std::cerr << "Hello world" << std::endl;
   Bool_t retval = kFALSE;
   if (fTrigSel.Contains("All") || fTrigSel.Contains("all") )
     {
@@ -295,7 +304,6 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
   for (Int_t id = 0; id < mEv->GetHeader()->GetNOfTriggerIds(); id++)
     {
       Int_t TrigId = mEv->GetHeader()->GetTriggerId(id);
-      // std::cerr << "testing" << TrigId << std::endl;
       if ( IsTriggerIdOK(TrigId) == kTRUE )
 	{
 	  retval = kTRUE;
@@ -303,7 +311,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
 	}
     }
 
-  __DEBUG(1, Form("Reject. No suitable trigger.") );
+  if ( !retval ) __DEBUG(1, Form("Reject. No suitable trigger.") );
   return retval;
 }
 

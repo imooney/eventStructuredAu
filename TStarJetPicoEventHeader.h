@@ -56,6 +56,7 @@ class TStarJetPicoEventHeader : public TObject
   Float_t GetCTBMultiplicity()           const {return fCTBmult;}
   Float_t GetPrimaryVertexMeanDipAngle() const {return fMeanDip;}
   Float_t GetPrimaryVertexRanking()      const {return fRank;}
+  Int_t   GetPrimaryVertexID()           const {return fVertID;}
   Int_t   GetNumberOfVertices()          const {return fNOfVertices;}
   Int_t   GetDSMInput()                  const {return fDSMInput;}
   Int_t   GetTrigMask()                  const {return fTrigMask;}
@@ -119,6 +120,7 @@ class TStarJetPicoEventHeader : public TObject
   void SetCTBMultiplicity(Float_t val)           {fCTBmult = val;}
   void SetPrimaryVertexMeanDipAngle(Float_t val) {fMeanDip = val;}
   void SetPrimaryVertexRanking(Float_t val)      {fRank = val;}
+  void SetPrimaryVertexID(Int_t val)             {fVertID = val;}
   void SetNumberOfVertices(Int_t val)            {fNOfVertices = val;}
   void SetDSMInput(Int_t val)                    {fDSMInput = val;}
   void SetTrigMask(Int_t val)                    {fTrigMask = val;}
@@ -177,6 +179,7 @@ class TStarJetPicoEventHeader : public TObject
   Float_t         fCTBmult;              // entral barrel multiplicity 
   Float_t         fMeanDip;              // primary vertex mean dip angle
   Float_t         fRank;                 // ranking of the vertex
+  Int_t           fVertID;               // ID of chosen vertex
   Int_t           fNOfVertices;          // number of vertices
   Int_t           fNOfTrigObjs;          // no of trigger objects
   Int_t           fDSMInput;             // trigger: DSM
