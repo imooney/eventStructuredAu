@@ -334,7 +334,7 @@ Bool_t TStarJetPicoReader::LoadTowers()
   
   // KK: Initialize high tower
   Float_t mHighTower=0;
-
+  
   for (Int_t ntower = 0;
        ntower < fEvent->GetHeader()->GetNOfTowers(); 
        ntower++) { 
@@ -383,20 +383,22 @@ Bool_t TStarJetPicoReader::LoadTowers()
 							 fTrackCuts,
 							 fFractionHadronicCorrection);
       }
-
+      
       // DEBUG
       HadronicResult->Fill(correctedEnergy);
 
+      Double_t mEt = 0;
+      // for high tower
+      Double_t mRawEt = ptower->GetEnergy() / TMath::CosH(ptower->GetEtaCorrected());
+      
       // fill the container
       if (correctedEnergy > 0) {
-	Double_t mEt = correctedEnergy / TMath::CosH(ptower->GetEtaCorrected());
+	mEt = correctedEnergy / TMath::CosH(ptower->GetEtaCorrected());
 	// KK: Now that the tower has passed quality control, check whether it's too high.
 	if ( !(fEventCuts->IsHighestEtOK( mEt )) ) {
 	  return kFALSE;
 	}
 	
-	// KK: Update highest tower
-	if ( mEt > mHighTower ) mHighTower = mEt;
 	
 	part.SetPtEtaPhiM(mEt, ptower->GetEtaCorrected(), ptower->GetPhiCorrected(), 0);
 	part.SetType(TStarJetVector::_TOWER);
@@ -409,11 +411,28 @@ Bool_t TStarJetPicoReader::LoadTowers()
       } else {
 	__DEBUG(9, Form("Reject Tower, correctedEnergy = %1.3f", correctedEnergy));
       }
+
+      // KK: Update highest tower? This is regardless of whether it survived hadr. corr.
+      
+      if ( fEventCuts->GetUseRawForMinEventEtCut() ) {
+	if ( mRawEt > mHighTower ) {
+	  __DEBUG(9, Form("Updating High Tower, UNcorrected Et = %1.3f", mRawEt));
+	  mHighTower = mRawEt;
+	}
+      } else {
+	if ( mEt > mHighTower ){
+	  __DEBUG(9, Form("Updating High Tower, corrected Et = %1.3f", mEt));
+	  mHighTower = mEt;
+	}
+      }
+      
     } // tower QA
   }
 
   // KK: soft high tower trigger
+
   if ( !(fEventCuts->IsHighTowerOk( mHighTower )) ) {
+    __DEBUG(2, Form("Rejected.  High Tower Et = %1.3f", mHighTower ));
     return kFALSE;
   }
   

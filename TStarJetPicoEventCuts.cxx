@@ -33,7 +33,8 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts()
   , fFlagPVRankingCut(kFALSE) //reasonable value of PV Ranking Cut depends on PV finder & dataset used -> off by default!
   , fMaxEventPt ( 99999 )
   , fMaxEventEt ( 99999 )
-  , fMinEventEt( -1 ) // software HT trigger AFTER hadronic correction.
+  , fMinEventEt( -1 ) // software HT trigger
+  , fUseRawForMinEventEtCut( true ) 
 {
   __DEBUG(2, "Creating event cuts with default values.");
 }
@@ -54,6 +55,7 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t)
   , fMaxEventPt( t.fMaxEventPt )
   , fMaxEventEt( t.fMaxEventEt )
   , fMinEventEt( t.fMinEventEt )
+  , fUseRawForMinEventEtCut( t.fUseRawForMinEventEtCut )
 
 {
   __DEBUG(2, "Copy event cuts.");  
@@ -61,9 +63,32 @@ TStarJetPicoEventCuts::TStarJetPicoEventCuts(const TStarJetPicoEventCuts &t)
 
 Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 {
-
+  // ORDER IS IMPORTANT!
+  // Scanning a string here, so check and completely evaluate things like
+  // Contains("HT3") before Contains("HT")
   __DEBUG(2, Form("mTrigId = %d TrigSel = %s", mTrigId, fTrigSel.Data()));
-  
+
+  //  -------------------- Run 14 HT3
+  if (fTrigSel.Contains("HT3") && !fTrigSel.Contains("pp")){
+    if ( mTrigId==450203 || mTrigId==450213 ) { // HT3*VPDMB-30 
+      __DEBUG(2, "HT3, Trigger for Au+Au  run 14 ok");
+      return kTRUE;
+    } else {
+      __DEBUG(2, "HT3, Trigger for Au+Au  run 14 NOT ok");
+      return kFALSE;
+    }
+  }
+  //  -------------------- Run 14 HT2
+  if (fTrigSel.Contains("HT2") && !fTrigSel.Contains("pp")){
+    if ( mTrigId==450202 || mTrigId==450212 ) { // HT3*VPDMB-30 
+      __DEBUG(2, "HT2, Trigger for Au+Au  run 14 ok");
+      return kTRUE;
+    } else {
+      __DEBUG(2, "HT2, Trigger for Au+Au  run 14 NOT ok");
+      return kFALSE;
+    }
+  }
+
   if (fTrigSel.Contains("pp"))
     {
       // include different pp triggers, MB,HT and JP ...
@@ -120,7 +145,6 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
     } //pp selection
   
    
-
   if (fTrigSel.Contains("HT") && !fTrigSel.Contains("pp"))
     {
       if (mTrigId==200620 || mTrigId==200621 || mTrigId==200211 || 
