@@ -23,6 +23,7 @@ class TStarJetPicoEventHeader : public TObject
   Double_t   GetProperReferenceMultiplicity(); 
 
   Int_t   GetReferenceMultiplicity()     const {return fRefMult;}
+  Int_t   GetRefMultRank0()              const {return fRefMultRank0;}
   Int_t   GetGReferenceMultiplicity()    const {return fGRefMult;}
   Int_t   GetReferenceCentrality()     const {return fRefCent;}
   Int_t   GetGReferenceCentrality()    const {return fGRefCent;}
@@ -30,6 +31,7 @@ class TStarJetPicoEventHeader : public TObject
   Double_t   GetGReferenceCentralityWeight()    const {return fGRefCentWeight;}
   Double_t   GetCorrectedReferenceMultiplicity()     const {return fCorRefMult;}
   Double_t   GetCorrectedGReferenceMultiplicity()    const {return fCorGRefMult;}
+  Double_t   GetGRefMultCorrRank0()             const {return fGRefMultCorrRank0;}
   Int_t   GetNGlobalTracks()             const {return fNOfGlobalTracks;}
   Float_t GetReactionPlaneAngle()        const {return fReactionPlaneAngle;}
   Int_t   GetTriggerId(Int_t ic)         const {return fTriggerIdArray.At(ic);}
@@ -85,6 +87,7 @@ class TStarJetPicoEventHeader : public TObject
   void SetEventId(Int_t val)                     {fEventId = val;}
   void SetRunId(Int_t val)                       {fRunId = val;}
   void SetReferenceMultiplicity(Int_t val)       {fRefMult = val;}
+  void SetRefMultRank0(Int_t val)                {fRefMultRank0 = val;}
   void SetGReferenceMultiplicity(Int_t val)      {fGRefMult = val;}
   void SetReferenceCentrality(Int_t val)       {fRefCent = val;}
   void SetGReferenceCentrality(Int_t val)      {fGRefCent = val;}
@@ -92,6 +95,7 @@ class TStarJetPicoEventHeader : public TObject
   void SetGReferenceCentralityWeight(Double_t val)      {fGRefCentWeight = val;}
   void SetCorrectedReferenceMultiplicity(Double_t val)       {fCorRefMult = val;}
   void SetCorrectedGReferenceMultiplicity(Double_t val)      {fCorGRefMult = val;}
+  void SetGRefMultCorrRank0(Double_t val)               {fGRefMultCorrRank0 = val;}
 
   void SetNPrimaryTracks(Int_t val)              {fNOfPrimaryTracks = val;}
   void SetNFtpcPrimaryTracks(Int_t val)          {fNOfFtpcPrimaryTracks = val;}
@@ -152,6 +156,7 @@ class TStarJetPicoEventHeader : public TObject
   Int_t           fEventId;              // was evid;  // event ID
   Int_t           fRunId;                // was runid; // run ID
   Int_t           fRefMult;              // reference multiplicity
+  Int_t           fRefMultRank0;         // reference multiplicity of zeroth-ranked vertex
   Int_t           fGRefMult;             // reference multiplicity for AuAu07
   Int_t           fRefCent;              // StRefMultCorr centrality9
   Int_t           fGRefCent;             // StRefMultCorr grefmult centrality9
@@ -159,6 +164,7 @@ class TStarJetPicoEventHeader : public TObject
   Double_t        fGRefCentWeight;       // StRefMultCorr event weight for trigger effiency
   Double_t        fCorRefMult;           // StRefMultCorr Corrected refmult 
   Double_t        fCorGRefMult;          // StRefMultCorr Corrected grefmult
+  Int_t           fGRefMultCorrRank0;        // GReference multiplicty of zeroth-ranked vertex
   Int_t           fNOfGlobalTracks;      // was gtracks;    // number of global tracks
   Float_t         fReactionPlaneAngle;   // rplane;     // reaction plane orientation
   Int_t           fNOfTriggerIds;        // number of trigger ids 

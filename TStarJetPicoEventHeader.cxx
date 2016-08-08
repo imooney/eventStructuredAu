@@ -14,6 +14,7 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader()
   , fEventId(0)
   , fRunId(0)
   , fRefMult(0)
+  , fRefMultRank0(0)
   , fGRefMult(0)
   , fRefCent(-1)
   , fGRefCent(-1)
@@ -21,6 +22,7 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader()
   , fGRefCentWeight(0)
   , fCorRefMult(0)
   , fCorGRefMult(0)
+  , fGRefMultCorrRank0(0)
   , fNOfGlobalTracks(0)
   , fReactionPlaneAngle(0)
   , fNOfTriggerIds(0)
@@ -68,13 +70,15 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader(const TStarJetPicoEventHeader &
   , fEventId(t.fEventId)
   , fRunId(t.fRunId)
   , fRefMult(t.fRefMult)
+  , fRefMultRank0(t.fRefMultRank0)
   , fGRefMult(t.fGRefMult)
   , fRefCent(t.fRefCent)
   , fGRefCent(t.fGRefCent)
   , fRefCentWeight(t.fRefCentWeight)
   , fGRefCentWeight(t.fGRefCentWeight)
   , fCorRefMult(t.fCorRefMult)
-  , fCorGRefMult(t.fCorGRefMult)    
+  , fCorGRefMult(t.fCorGRefMult)
+  , fGRefMultCorrRank0(t.fGRefMultCorrRank0)    
   , fNOfGlobalTracks(t.fNOfGlobalTracks)
   , fReactionPlaneAngle(t.fReactionPlaneAngle)
   , fNOfTriggerIds(t.fNOfTriggerIds)
@@ -128,6 +132,7 @@ void TStarJetPicoEventHeader::Clear(Option_t */*Option*/)
   fEventId = 0;              
   fRunId = 0;                
   fRefMult = 0;
+  fRefMultRank0 = 0;
   fGRefMult = 0;
   fRefCent = 0;
   fGRefCent = 0;
@@ -135,6 +140,7 @@ void TStarJetPicoEventHeader::Clear(Option_t */*Option*/)
   fGRefCentWeight = 0;
   fCorRefMult = 0;
   fCorGRefMult = 0;
+  fGRefMultCorrRank0 = 0;
   fNOfGlobalTracks = 0;      
   fReactionPlaneAngle = 0;   
   fNOfTriggerIds = 0;            
