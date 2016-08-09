@@ -74,6 +74,11 @@ class TStarJetPicoReaderBase : public TObject
   virtual void    PrintEventInfo();
 
   virtual void    SetProcessV0s(Bool_t val = kTRUE) {fProcessV0s = val;}
+  // Added by KK
+  // Reasoning: Geant MC data uses "tracks" only but towers are filled
+  // This is not per se an issue b/c Ntowers is set to 0
+  // However, using this method makes it more explicit and transparent
+  virtual void    SetProcessTowers(Bool_t val = kTRUE) {fProcessTowers = val;}
 
   TStopwatch*     GetStopWatch() {return fStopwatch;}
 
@@ -104,6 +109,7 @@ class TStarJetPicoReaderBase : public TObject
   TList*             fSelectedV0s;//! v0s passed cuts
 
   Bool_t             fProcessV0s;// flag whether to process V0s
+  Bool_t             fProcessTowers;// flag whether to process Towers
 
  private:
 

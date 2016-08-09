@@ -201,10 +201,13 @@ Bool_t TStarJetPicoReaderBase::ProcessEvent()
       return kFALSE;
     }
 
-  if ( LoadTowers() == kFALSE )
+  if (fProcessTowers)
     {
-      __DEBUG(2, Form("Event not accepted. Failed on LoadTowers."));
-      return kFALSE;
+      if ( LoadTowers() == kFALSE )
+	{
+	  __DEBUG(2, Form("Event not accepted. Failed on LoadTowers."));
+	  return kFALSE;
+	}
     }
 
 
