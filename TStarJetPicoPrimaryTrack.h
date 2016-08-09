@@ -23,6 +23,8 @@ class TStarJetPicoPrimaryTrack : public TObject
   Float_t GetPy()            const {return fPy;} 
   Float_t GetPz()            const {return fPz;} 
 
+  Float_t GetPt()            const {return sqrt(fPx*fPx + fPy*fPy);} 
+
   Float_t GetEta(); 
   Float_t GetPhi()           const {return TMath::ATan2(fPy,fPx);} 
   Float_t GetDCA()           const {return fDCA;} 
