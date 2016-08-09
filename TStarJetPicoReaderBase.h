@@ -79,6 +79,12 @@ class TStarJetPicoReaderBase : public TObject
   // This is not per se an issue b/c Ntowers is set to 0
   // However, using this method makes it more explicit and transparent
   virtual void    SetProcessTowers(Bool_t val = kTRUE) {fProcessTowers = val;}
+  // Added by KK to allow customized rejection for some
+  // very specific cases
+  // Original goal was one specific event in Run6 Geant
+  // with an absurdly high pT track (20 GeV for pThat=4-5)
+  // Checked in ProcessEvents();
+  virtual void    SetUseRejectAnyway(Bool_t val = kTRUE) {fUseRejectAnyway = val;}
 
   TStopwatch*     GetStopWatch() {return fStopwatch;}
 
@@ -92,6 +98,8 @@ class TStarJetPicoReaderBase : public TObject
   virtual Bool_t LoadV0s(TArrayI *trackIdsToRemove) = 0;
   virtual Bool_t LoadTracks(TArrayI *trackIdsToRemove) = 0;
   virtual Bool_t LoadTowers() = 0;
+
+  Bool_t RejectAnyway();
   
   TStarJetVectorContainer<TStarJetVector>* fOutputContainer;//! output vectors
 
@@ -110,6 +118,8 @@ class TStarJetPicoReaderBase : public TObject
 
   Bool_t             fProcessV0s;// flag whether to process V0s
   Bool_t             fProcessTowers;// flag whether to process Towers
+
+  Bool_t             fUseRejectAnyway; // flag whether to check for a custom rejection method
 
  private:
 

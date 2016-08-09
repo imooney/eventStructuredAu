@@ -135,7 +135,7 @@ Bool_t  TStarJetPicoTrackCuts::IsPCTOK(TStarJetPicoPrimaryTrack *tr) {
 
 Bool_t TStarJetPicoTrackCuts::IsPhiOK(TStarJetPicoPrimaryTrack *tr) {
     Double_t phi = tr->GetPhi();
-    Double_t min, max;
+    Double_t min=0, max=0;
     for (unsigned i = 0; i < restrictedPhiRanges.size(); ++i) {
         min = restrictedPhiRanges[i][0];
         max = restrictedPhiRanges[i][1];
