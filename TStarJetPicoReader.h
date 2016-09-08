@@ -35,6 +35,12 @@ class TStarJetPicoReader : public TStarJetPicoReaderBase
   TStarJetPicoTowerCuts* GetTowerCuts() {return fTowerCuts;}
   TStarJetPicoV0Cuts*    GetV0Cuts()    {return fV0Cuts;}
 
+  // added by kk to grab an offline high tower
+  // Hadronic correction is controlled by UseRawForMinEventEtCut!
+  // CAREFUL with JetTreeMc data, where everything is a "track"!
+  // returns 0 if none found or towers not processed
+  TStarJetVector*        GetHighTower( ) const  {  return mHighTower;}
+
   void SetRejectTowerElectrons(Bool_t val) {fRejectTowerElectrons = val;}
   void SetApplyMIPCorrection(Bool_t val);
   void SetApplyFractionHadronicCorrection(Bool_t val);
@@ -71,6 +77,8 @@ class TStarJetPicoReader : public TStarJetPicoReaderBase
   Bool_t   fApplyFractionHadronicCorrection; // Another type of charge particles energy depostion in EMC.
   Double_t fFractionHadronicCorrection; // Fraction of momentum of the TPC track to be subtracted from EMC tower.
   
+  TStarJetVector*        mHighTower; //! KK: highest tower, filled during LoadTowers
+
   // DEBUG
   /// To count the number of rejected towers
   TH1D* HadronicResult;

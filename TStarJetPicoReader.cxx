@@ -49,6 +49,7 @@ TStarJetPicoReader::TStarJetPicoReader()
   , fApplyMIPCorrection(kTRUE)
   , fApplyFractionHadronicCorrection(kFALSE)
   , fFractionHadronicCorrection(0.3)
+  , mHighTower (0)
 {
   //
   // Default constructor
@@ -321,7 +322,7 @@ Bool_t TStarJetPicoReader::LoadTowers()
   // Correct for hadronic showers.
   // Add to surviving TStarJetVector to the output container.
   // 
-
+  
   // KK: Make sure cuts are consistent
   float MaxEventEtCut = fEventCuts->GetMaxEventEtCut();
   float MaxEtCut = fTowerCuts->GetMaxEtCut();
@@ -333,7 +334,9 @@ Bool_t TStarJetPicoReader::LoadTowers()
   TStarJetVector part;
   
   // KK: Initialize high tower
-  Float_t mHighTower=0;
+  Float_t mHighTowerEt=0;
+  if ( mHighTower ) delete mHighTower;
+  mHighTower=0;  
   
   for (Int_t ntower = 0;
        ntower < fEvent->GetHeader()->GetNOfTowers(); 
@@ -413,16 +416,26 @@ Bool_t TStarJetPicoReader::LoadTowers()
       }
 
       // KK: Update highest tower? This is regardless of whether it survived hadr. corr.
-      
       if ( fEventCuts->GetUseRawForMinEventEtCut() ) {
-	if ( mRawEt > mHighTower ) {
-	  __DEBUG(9, Form("Updating High Tower, UNcorrected Et = %1.3f", mRawEt));
-	  mHighTower = mRawEt;
+	if ( mRawEt > mHighTowerEt ) {
+	  __DEBUG(2, Form("Updating High Tower, UNcorrected Et = %1.3f", mRawEt));
+	  __DEBUG(2, Form("                      (corrected Et = %1.3f)", mEt));
+	  //	  __DEBUG(2, Form("                      Eta = %1.3f", ptower->GetEtaCorrected()));
+	  mHighTowerEt = mRawEt;
+	  if (mHighTower) delete mHighTower;
+	  mHighTower   = new TStarJetVector();
+	  mHighTower->SetPtEtaPhiM(mRawEt, ptower->GetEtaCorrected(), ptower->GetPhiCorrected(), 0);
+	  mHighTower->SetType(TStarJetVector::_TOWER);
+	  mHighTower->SetCharge(TStarJetVector::_NEUTRAL);	      
+	  mHighTower->SetPID(fTowerCuts->DoPID(ptower)); // not known yet...
+	  mHighTower->SetTowerID(ptower->GetId());
 	}
       } else {
-	if ( mEt > mHighTower ){
-	  __DEBUG(9, Form("Updating High Tower, corrected Et = %1.3f", mEt));
-	  mHighTower = mEt;
+	if ( mEt > mHighTowerEt ){
+	  __DEBUG(2, Form("Updating High Tower, corrected Et = %1.3f", mEt));
+	  __DEBUG(2, Form("                          (Raw Et = %1.3f)", mRawEt));
+	  mHighTowerEt = mEt;
+	  mHighTower = &part;
 	}
       }
       
@@ -431,8 +444,8 @@ Bool_t TStarJetPicoReader::LoadTowers()
 
   // KK: soft high tower trigger
 
-  if ( !(fEventCuts->IsHighTowerOk( mHighTower )) ) {
-    __DEBUG(2, Form("Rejected.  High Tower Et = %1.3f", mHighTower ));
+  if ( !(fEventCuts->IsHighTowerOk( mHighTowerEt )) ) {
+    __DEBUG(2, Form("Rejected.  High Tower Et = %1.3f", mHighTowerEt ));
     return kFALSE;
   }
   
