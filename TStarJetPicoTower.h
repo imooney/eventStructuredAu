@@ -21,6 +21,7 @@ class TStarJetPicoTower : public TObject
   Float_t GetPhi()    const {return fPhi;}
   Int_t   GetADC()    const {return fADC;}
   Float_t GetEtaCorrected()    const {return fEtaCorrected;}
+  Float_t GetEt()     const {return fEnergy / TMath::CosH(fEtaCorrected);}
   Float_t GetPhiCorrected()    const {return fPhiCorrected;}
   
   Int_t   GetSMDClusterP()   const {return fSMDClusterP;}
