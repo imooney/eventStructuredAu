@@ -146,7 +146,7 @@ class TStarJetPicoPrimaryTrack : public TObject
 /*   Float_t         PrimNsigmaProton[2056];   //[nPrimTrks] */
 
 
-   ClassDef(TStarJetPicoPrimaryTrack, 6)
+   ClassDef(TStarJetPicoPrimaryTrack, 7)
 
 };
 
