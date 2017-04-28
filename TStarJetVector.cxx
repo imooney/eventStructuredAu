@@ -69,25 +69,21 @@ TStarJetVector::~TStarJetVector()
 
 void TStarJetVector::SetFeature(Int_t idx, Double_t value)
 {
-  // return; // DEBUG
   fFeaturesD[idx] = value;
 }
 
 void TStarJetVector::SetFeature(Int_t idx, Int_t value)
 {
-  // return; // DEBUG
   fFeaturesI[idx] = value;
 }
 
 void TStarJetVector::SetFeatureD(Int_t idx, Double_t value)
 {
-  // return; // DEBUG
   fFeaturesD[idx] = value;
 }
 
 void TStarJetVector::SetFeatureI(Int_t idx, Int_t value)
 {
-  // return; // DEBUG
   fFeaturesI[idx] = value;
 }
 

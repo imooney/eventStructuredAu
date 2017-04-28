@@ -23,7 +23,7 @@ MODO          = $(patsubst %.h,%.$(ObjSuf),$(MODHEADERS)) \
 
 MODSO         = lib$(MODULE).$(DllSuf)
 
-# # uncomment for debug info in the library
+# uncomment for debug info in the library
 # CXXFLAGS     += -g
 
 ifeq ($(PLATFORM),win32)

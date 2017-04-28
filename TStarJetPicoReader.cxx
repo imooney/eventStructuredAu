@@ -322,7 +322,7 @@ Bool_t TStarJetPicoReader::LoadTowers()
   // Correct for hadronic showers.
   // Add to surviving TStarJetVector to the output container.
   // 
-  
+
   // KK: Make sure cuts are consistent
   float MaxEventEtCut = fEventCuts->GetMaxEventEtCut();
   float MaxEtCut = fTowerCuts->GetMaxEtCut();

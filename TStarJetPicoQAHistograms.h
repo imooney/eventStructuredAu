@@ -79,8 +79,6 @@ class TStarJetPicoQAHistograms : public TNamed
   TH2D *hDeltaEtaDeltaPhiProj;//!
   TH2D *hDeltaEtaDeltaPhiProjAcc;//!
 
-  TH1D *hdVzClosestVertex;
-  TH1D *hdVzZerothIdVertex;
 
  private:  
 

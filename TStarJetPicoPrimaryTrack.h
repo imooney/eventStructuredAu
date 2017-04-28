@@ -51,6 +51,9 @@ class TStarJetPicoPrimaryTrack : public TObject
   Float_t GetTofBeta()       const {return fTofBeta;}
   Float_t GetTofyLocal()     const {return fTofyLocal;}
 
+  Int_t GetidTruth()         const {return fidTruth;}
+  Int_t GetqaTruth()         const {return fqaTruth;}
+
   // SETTERS  
 
   void SetCharge(Int_t val)          {fCharge = val;}
@@ -86,6 +89,9 @@ class TStarJetPicoPrimaryTrack : public TObject
   void SetTofBeta(Float_t val)       {fTofBeta = val;}
   void SetTofyLocal(Float_t val)       {fTofyLocal = val;}
 
+  void SetidTruth(Int_t val)         {fidTruth = val;}
+  void SetqaTruth(Int_t val)         {fqaTruth = val;}
+
  protected:
  private:
 
@@ -118,6 +124,11 @@ class TStarJetPicoPrimaryTrack : public TObject
   Float_t        fTofTime;
   Float_t        fTofBeta;
   Float_t        fTofyLocal;
+
+  Int_t          fidTruth;		// #ly for matching to McTrack in embedding data: the id(STAR MuDst)/key(Yale Pico) for the largest contributor McTrack
+  Int_t          fqaTruth;		// #ly for matching to McTrack in embedding data: percentage of hits contributed by the McTrack
+  
+
   // this comment is for reference to original code by Sevil
 /*   Int_t           fCharge; // was PrimCharge[2056];   //[nPrimTrks] */
 /*   Int_t          fNhits; PrimNhitsFit[2056];   //[nPrimTrks] */

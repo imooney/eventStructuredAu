@@ -38,6 +38,9 @@ class TStarJetPicoEventHeader : public TObject
   Int_t   GetNOfTriggerIds()             const {return fNOfTriggerIds;}
   const TArrayI* GetTriggerIdArray()     const {return &fTriggerIdArray;}
 
+  /// KK: Convenience lookup for individual trigger IDs, mainly to plot directly from the tree
+  Bool_t HasTriggerId ( const Int_t id ) const;
+
   // These next three are the multiplicities of the branches...
   Int_t   GetNOfMatchedTowers()          const {return fNOfTowerTrackMatched;}
   Int_t   GetNOfTowers()                 const {return fNOfTowers;}
@@ -211,7 +214,7 @@ class TStarJetPicoEventHeader : public TObject
   Int_t    fnumberOfVpdEastHits;
   Int_t    fnumberOfVpdWestHits;
 
-  ClassDef(TStarJetPicoEventHeader, 9)
+  ClassDef(TStarJetPicoEventHeader, 10)
 };
 
 #endif

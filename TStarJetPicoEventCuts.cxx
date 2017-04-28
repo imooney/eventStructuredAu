@@ -88,63 +88,91 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
       return kFALSE;
     }
   }
-
+  
   if (fTrigSel.Contains("pp"))
     {
       // include different pp triggers, MB,HT and JP ...
-      if ( mTrigId > 0 )
+      if (fTrigSel.Contains("ppHT"))
 	{
-	  if (fTrigSel.Contains("ppHT"))
+	  if (mTrigId==117211 || mTrigId==117212 || 
+	      mTrigId==127212 || mTrigId==127213 || 
+	      mTrigId==137213)
 	    {
-	      if (mTrigId==117211 || mTrigId==117212 || 
-		  mTrigId==127212 || mTrigId==127213 || 
-		  mTrigId==137213)
-		{
-		  __DEBUG(2, "HT Trigger p+p events selected");
-		  return kTRUE;
-		}
-               else if (mTrigId==240530 || mTrigId==240540 || mTrigId==240550 || mTrigId==240560 ||
-                        mTrigId==240570)
-		{
-		  __DEBUG(2, "HT Trigger p+p events run 9 selected");
-		  return kTRUE;
-		}
-	      else 
-		{
-		  __DEBUG(2, "Reject ppHT trigger.");
-		  return kFALSE;
-		}
+	      __DEBUG(2, "HT Trigger p+p events selected");
+	      return kTRUE;
+	    }
+	  else if (mTrigId==240530 || mTrigId==240540 || mTrigId==240550 || mTrigId==240560 ||
+		   mTrigId==240570)
+	    {
+	      __DEBUG(2, "HT Trigger p+p events run 9 selected");
+	      return kTRUE;
+	    }
+	  else if (mTrigId==370541 || mTrigId==370542 || mTrigId==370351 )		// BHT0*BBCMB*TOF0, BHT0*BBCMB*TOF0, MTD*BHT3
+	    {
+	      __DEBUG(2, "HT Trigger p+p events run 12 selected");
+	      return kTRUE;
+	    }
+	  else 
+	    {
+	      __DEBUG(2, "Reject ppHT trigger.");
+	      return kFALSE;
+	    }
+	}
+      else if (fTrigSel.Contains("ppJP"))
+	{
+	  if (fTrigSel.Contains("ppJP2")) {					// test
+	    if (mTrigId==370621)		//  JP2				// test
+	      {								// test
+		__DEBUG(2, "JP2 Trigger p+p events run 12 selected");		// test
+		return kTRUE;							// test
+	      }								// test
+	    else return kFALSE;						// test
+	  }									// test
+	  else if (mTrigId==117221 || mTrigId==127221 || 
+		   mTrigId==137221 || mTrigId==137222)
+	    {
+	      __DEBUG(2,"JP Trigger p+p events selected"); 
+	      return kTRUE;
+	    }
+	  else if (mTrigId==240410 || mTrigId==240411 || mTrigId==240650 || mTrigId==240651 ||
+		   mTrigId==240652)
+	    {
+	      __DEBUG(2, "JP Trigger p+p events run 9 selected");
+	      return kTRUE;
+	    }
+	  else if (mTrigId==370601 || mTrigId==370611 || mTrigId==370621)		// JP0, JP1, JP2
+	    {
+	      __DEBUG(2, "JP Trigger p+p events run 12 selected");
+	      return kTRUE;
 	    }
 	  else
-	    if (fTrigSel.Contains("ppJP"))
-	      {
-		if (mTrigId==117221 || mTrigId==127221 || 
-		    mTrigId==137221 || mTrigId==137222)
-		  {
-		    __DEBUG(2,"JP Trigger p+p events selected"); 
-		    return kTRUE;
-		}
-               else if (mTrigId==240410 || mTrigId==240411 || mTrigId==240650 || mTrigId==240651 ||
-                        mTrigId==240652)
-		{
-		  __DEBUG(2, "JP Trigger p+p events run 9 selected");
-		  return kTRUE;
-		}
-		else 
-		  {
-		  __DEBUG(2, "Reject ppJP trigger.");
-		  return kFALSE;
-		  }
-	      }
-	}      
+	    return kFALSE;
+	}
+      else if (fTrigSel.Contains("ppMB"))
+	{
+	  if (mTrigId==370011)
+	    {
+	      __DEBUG(2,"MB Trigger p+p events run 12 selected"); 
+	      return kTRUE;
+	    }
+	  else
+	    return kFALSE;
+	}	
+      else if (fTrigSel.Contains("ppHM"))
+	{
+	  if (mTrigId==370341)
+	    {
+	      __DEBUG(2,"High-multiplicity Trigger p+p events run 12 selected"); 
+	      return kTRUE;
+	    }
+	}
       else
 	{
 	  __DEBUG(2, "Reject pp trigger.");
 	  return kFALSE;
 	}
     } //pp selection
-  
-   
+
   if (fTrigSel.Contains("HT") && !fTrigSel.Contains("pp"))
     {
       if (mTrigId==200620 || mTrigId==200621 || mTrigId==200211 || 
@@ -324,7 +352,6 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(TStarJetPicoEvent *mEv)
       return kTRUE;
     }
 
-  // std::cerr << "Testing " << mEv->GetHeader()->GetNOfTriggerIds() << " IDs" << std::endl;
   for (Int_t id = 0; id < mEv->GetHeader()->GetNOfTriggerIds(); id++)
     {
       Int_t TrigId = mEv->GetHeader()->GetTriggerId(id);
@@ -528,7 +555,6 @@ Bool_t TStarJetPicoEventCuts::CheckEvent(TStarJetPicoEvent *mEv, TChain *fInputT
 Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv, TChain *fInputTree)
 {
   Bool_t retval;
-  // std::cout << "IsTriggerIdOK(mEv) = " << IsTriggerIdOK(mEv) << std::endl;
   retval = (IsRefMultOK(mEv) && IsRefCentOK(mEv, fInputTree) && IsVertexZOK(mEv) && IsTriggerIdOK(mEv) && (fFlagPVRankingCut==kFALSE || IsPVRankingOK(mEv)) );
   
   //cuts for dAu2008

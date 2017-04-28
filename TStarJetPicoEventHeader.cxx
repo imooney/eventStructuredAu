@@ -192,7 +192,7 @@ void TStarJetPicoEventHeader::AddTriggerId(Int_t id)
   //
   if ( fNOfTriggerIds < fTriggerIdArray.GetSize() )
     {
-      fTriggerIdArray[fNOfTriggerIds++] = id;      
+      fTriggerIdArray[fNOfTriggerIds++] = id;
     }
   else
     {
@@ -203,6 +203,20 @@ void TStarJetPicoEventHeader::AddTriggerId(Int_t id)
       AddTriggerId(id);
     }
 }
+
+// -----------------------------------------------------------------------------
+Bool_t TStarJetPicoEventHeader::HasTriggerId ( const Int_t id ) const{
+  for ( int i=0; i< fTriggerIdArray.GetSize() ; ++i){
+    // std::cout << fTriggerIdArray[i] << " == " << id << "? "<< std::endl;
+    if ( fTriggerIdArray[i] == id ) {
+      // std::cout << " yes!" << std::endl;      
+      return true;
+    }
+  }
+
+  return false;
+}
+
 
 
 // -----------------------------------------------------------------------------
