@@ -43,6 +43,14 @@ class TStarJetPicoTowerCuts : public TObject
   void Sety8PythiaCut(Bool_t val) {y8PythiaCut = val;}
   Bool_t Gety8PythiaCut() {return y8PythiaCut;}
 
+  /* nick elsey: starting with y14 data, all towers 
+     are saved regardless of tower status. Default 
+     behavior is to reject towers with status != 1
+     To accept all towers, set to false
+  */
+  void UseTowerStatusRejection(Bool_t val) {useTowerStatus=val;}
+  Bool_t GetTowerStatusRejection() {return useTowerStatus;}
+
  private:
   /// KK: Replacement for IsTowerOK(Int_t mTowId, Int_t mTrigId)
   Bool_t IsTowerOK( Int_t mTowId );
@@ -61,6 +69,8 @@ class TStarJetPicoTowerCuts : public TObject
     
   // KK: Just use one set of rejected towers
   std::set<Int_t> badTowers; 
+
+  Bool_t useTowerStatus;
 
   ClassDef(TStarJetPicoTowerCuts, 3)
 };

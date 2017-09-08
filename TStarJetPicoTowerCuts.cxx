@@ -31,6 +31,7 @@ TStarJetPicoTowerCuts::TStarJetPicoTowerCuts()
   , fMaxEt(1000.)// by default, no cut effectively
   , restrictedPhiRanges()
   , y8PythiaCut(kFALSE)
+  , useTowerStatus(kTRUE)
 {
   __DEBUG(2, "Creating tower cuts with default values.");
 }
@@ -149,6 +150,13 @@ Bool_t TStarJetPicoTowerCuts::IsTowerOK(TStarJetPicoTower *tw, TStarJetPicoEvent
   if ( !IsTowerOK(towerId) ) {
     retval = kFALSE;
   }
+  
+  // if requested, check tower status
+  if ( useTowerStatus && tw->GetTowerStatus() != 1) {
+    retval = kFALSE;
+    __DEBUG(9, Form("reject: tower status = %u", tw->GetTowerStatus() ));
+  }
+  else __DEBUG(9, Form("accept: useTowerStatus = %d, tower status = %u", useTowerStatus, tw->GetTowerStatus()  ) );
 
   for (Int_t id = 0; id < mEv->GetHeader()->GetNOfTriggerIds(); id++){
     Int_t TrigId = mEv->GetHeader()->GetTriggerId(id);    
