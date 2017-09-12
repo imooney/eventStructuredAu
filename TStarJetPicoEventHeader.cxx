@@ -46,6 +46,8 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader()
   , fNOfTrigObjs(0) 
   , fDSMInput(0)
   , fTrigMask(0)
+  , fHighTowerThreshold{}
+  , fJetPatchThreshold{}
   , fZdcWestRate(0)
   , fZdcEastRate(0)
   , fZdcCoincidenceRate(0)
@@ -117,7 +119,8 @@ TStarJetPicoEventHeader::TStarJetPicoEventHeader(const TStarJetPicoEventHeader &
   , fnumberOfVpdEastHits(t.fnumberOfVpdEastHits)
   , fnumberOfVpdWestHits(t.fnumberOfVpdWestHits)
 {
-  ;
+  for ( int i = 0; i < 4; ++i ) fHighTowerThreshold[i] = t.fHighTowerThreshold[i];
+  for ( int i = 0; i < 3; ++i ) fJetPatchThreshold[i] = t.fJetPatchThreshold[i];
 }
 
 // -----------------------------------------------------------------------------
@@ -166,6 +169,8 @@ void TStarJetPicoEventHeader::Clear(Option_t */*Option*/)
   fNOfTrigObjs = 0;
   fDSMInput = 0;
   fTrigMask = 0;
+  for ( int i = 0; i < 4; ++i ) fHighTowerThreshold[i] = 0;
+  for ( int i = 0; i < 3; ++i ) fJetPatchThreshold[i] = 0;
   fZdcWestRate = 0;
   fZdcEastRate = 0;
   fZdcCoincidenceRate = 0;
