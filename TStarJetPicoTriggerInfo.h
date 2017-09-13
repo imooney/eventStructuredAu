@@ -90,7 +90,7 @@ class TStarJetPicoTriggerInfo : public TObject
   Int_t fTrigFlag;//1=HTL0, 2=JPL0, 3=HTL2, 4=JPL2
   
 
- ClassDef(TStarJetPicoTriggerInfo, 2)
+ ClassDef(TStarJetPicoTriggerInfo, 3)
    };
 
 #endif
