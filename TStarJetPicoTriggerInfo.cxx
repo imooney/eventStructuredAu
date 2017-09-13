@@ -5,40 +5,39 @@ ClassImp(TStarJetPicoTriggerInfo)
 //____________________________________________________
 TStarJetPicoTriggerInfo::TStarJetPicoTriggerInfo()
  : TObject()
-  // , fTrigType(0)
    , fEta(0)
    , fPhi(0)
- , fTrigFlag(0)
    , fId(0)
    , fADC(0)
+   , fBitMap{}
+   , fTrigFlag(0)
 {}
 //____________________________________________________
 TStarJetPicoTriggerInfo::TStarJetPicoTriggerInfo(const TStarJetPicoTriggerInfo &t)
 : TObject(t)
-  //, fTrigType(t.fTrigType)
   , fEta(t.fEta)
   , fPhi(t.fPhi)
-  , fTrigFlag(t.fTrigFlag)
   , fId(t.fId)
   , fADC(t.fADC)
+  , fBitMap(t.fBitMap)
+  , fTrigFlag(t.fTrigFlag)
 {}
 
 //____________________________________________________
-// TStarJetPicoTriggerInfo::TStarJetPicoTriggerInfo(TString trigtype,Int_t flag,Float_t eta, Float_t phi){
-//   fTrigType=trigtype;
-//   fEta=eta;
-//   fPhi=phi;
-//   fTrigFlag=flag;
-// }
-//____________________________________________________
 TStarJetPicoTriggerInfo::~TStarJetPicoTriggerInfo(){
   //destructor
+}
+//____________________________________________________
+void TStarJetPicoTriggerInfo::Clear(Option_t */*Option*/){
   fEta=0;
   fPhi=0;
-  fTrigFlag=0;
   fId=0;
   fADC=0;
+  fBitMap.reset();
+  fTrigFlag=0;
 }
+
+/***************** Depricated functions ***************/
 //____________________________________________________
 Int_t TStarJetPicoTriggerInfo::isJPL0(){
   if(fTrigFlag==2)return 1;
@@ -74,16 +73,6 @@ Int_t TStarJetPicoTriggerInfo::isHTS(){
 Int_t TStarJetPicoTriggerInfo::isBBC(){
   if(fTrigFlag==5)return 1;
   else return 0;
-}
-//____________________________________________________
-void TStarJetPicoTriggerInfo::Clear(Option_t */*Option*/){
-  // fTrigType="";
-  fEta=0;
-  fPhi=0;
-  fTrigFlag=0;
-  fId=0;
-  fADC=0;
-
 }
 //____________________________________________________
 void TStarJetPicoTriggerInfo::PrintInfo(){
