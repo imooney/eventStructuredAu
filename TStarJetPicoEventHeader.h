@@ -5,7 +5,6 @@
 
 #include <TObject.h>
 #include <TArrayI.h>
-#include <cassert>
 
 class TStarJetPicoEventHeader : public TObject
 {
