@@ -65,6 +65,13 @@ class TStarJetPicoEventHeader : public TObject
   Int_t   GetNumberOfVertices()          const {return fNOfVertices;}
   Int_t   GetDSMInput()                  const {return fDSMInput;}
   Int_t   GetTrigMask()                  const {return fTrigMask;}
+  
+  /* trigger thresholds for the run: barrel high tower 0-3, jet patch 0-2
+     returns an ADC value. This is the same value that is used by the
+     StTriggerSimuMaker for the TStarJetPicoTriggerInfo objects
+   */
+  UInt_t GetHighTowerThreshold( UInt_t i ) const {return fHighTowerThreshold[i];}
+  UInt_t GetJetPatchThreshold( UInt_t i )  const {return fJetPatchThreshold[i];}
 
   //cut variables for dAu year 8
   Float_t GetZdcWestRate()                  const {return fZdcWestRate;}
@@ -131,6 +138,9 @@ class TStarJetPicoEventHeader : public TObject
   void SetNumberOfVertices(Int_t val)            {fNOfVertices = val;}
   void SetDSMInput(Int_t val)                    {fDSMInput = val;}
   void SetTrigMask(Int_t val)                    {fTrigMask = val;}
+  
+  void SetHighTowerThreshold( UInt_t i, UInt_t val ) {fHighTowerThreshold[i] = val;}
+  void SetJetPatchThreshold( UInt_t i, UInt_t val )  {fJetPatchThreshold[i] = val;}
 
   
   //cut variables for dAu year 8
@@ -193,6 +203,8 @@ class TStarJetPicoEventHeader : public TObject
   Int_t           fNOfTrigObjs;          // no of trigger objects
   Int_t           fDSMInput;             // trigger: DSM
   Int_t           fTrigMask;             // trigger: Mask
+  UInt_t          fHighTowerThreshold[4];// trigger thresholds for barrel EMC triggers: BHT 0, 1, 2, 3
+  UInt_t          fJetPatchThreshold[3]; // trigger thresholds for jet patch triggers: JP 0, 1, 2
 
   //cut variables for dAu year 8
   Float_t  fZdcWestRate;

@@ -260,7 +260,7 @@ TChain* TStarJetPicoUtils::BuildChainFromFileList(const char *clist,
 
   Int_t i = 0;
   Int_t iactualFiles = 0;
-  ifstream input_list;//(clist, ifstream::in);
+  std::ifstream input_list;//(clist, std::ifstream::in);
   input_list.open(clist);
   if (!input_list.is_open())
     {

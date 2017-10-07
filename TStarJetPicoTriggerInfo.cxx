@@ -5,40 +5,39 @@ ClassImp(TStarJetPicoTriggerInfo)
 //____________________________________________________
 TStarJetPicoTriggerInfo::TStarJetPicoTriggerInfo()
  : TObject()
-  // , fTrigType(0)
    , fEta(0)
    , fPhi(0)
- , fTrigFlag(0)
    , fId(0)
    , fADC(0)
+   , fBitMap{}
+   , fTrigFlag(0)
 {}
 //____________________________________________________
 TStarJetPicoTriggerInfo::TStarJetPicoTriggerInfo(const TStarJetPicoTriggerInfo &t)
 : TObject(t)
-  //, fTrigType(t.fTrigType)
   , fEta(t.fEta)
   , fPhi(t.fPhi)
-  , fTrigFlag(t.fTrigFlag)
   , fId(t.fId)
   , fADC(t.fADC)
+  , fBitMap(t.fBitMap)
+  , fTrigFlag(t.fTrigFlag)
 {}
 
 //____________________________________________________
-// TStarJetPicoTriggerInfo::TStarJetPicoTriggerInfo(TString trigtype,Int_t flag,Float_t eta, Float_t phi){
-//   fTrigType=trigtype;
-//   fEta=eta;
-//   fPhi=phi;
-//   fTrigFlag=flag;
-// }
-//____________________________________________________
 TStarJetPicoTriggerInfo::~TStarJetPicoTriggerInfo(){
   //destructor
+}
+//____________________________________________________
+void TStarJetPicoTriggerInfo::Clear(Option_t */*Option*/){
   fEta=0;
   fPhi=0;
-  fTrigFlag=0;
   fId=0;
   fADC=0;
+  fBitMap.reset();
+  fTrigFlag=0;
 }
+
+/***************** Depricated functions ***************/
 //____________________________________________________
 Int_t TStarJetPicoTriggerInfo::isJPL0(){
   if(fTrigFlag==2)return 1;
@@ -76,21 +75,11 @@ Int_t TStarJetPicoTriggerInfo::isBBC(){
   else return 0;
 }
 //____________________________________________________
-void TStarJetPicoTriggerInfo::Clear(Option_t */*Option*/){
-  // fTrigType="";
-  fEta=0;
-  fPhi=0;
-  fTrigFlag=0;
-  fId=0;
-  fADC=0;
-
-}
-//____________________________________________________
 void TStarJetPicoTriggerInfo::PrintInfo(){
-  cout<<"=============== Trigger Info =============="<<endl;
-  if(fTrigFlag==1)cout<<"HTL0;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<endl;
-  if(fTrigFlag==2)cout<<"JPL0;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<endl;
-  if(fTrigFlag==3)cout<<"HTL2;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<endl;
-  if(fTrigFlag==4)cout<<"JPL2;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<endl;
-  cout<<"=========================================="<<endl;
+  std::cout<<"=============== Trigger Info =============="<<std::endl;
+  if(fTrigFlag==1)std::cout<<"HTL0;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<std::endl;
+  if(fTrigFlag==2)std::cout<<"JPL0;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<std::endl;
+  if(fTrigFlag==3)std::cout<<"HTL2;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<std::endl;
+  if(fTrigFlag==4)std::cout<<"JPL2;  eta="<<fEta<<"   phi="<<fPhi<<"   id="<<fId<<"   ADC="<<fADC<<std::endl;
+  std::cout<<"=========================================="<<std::endl;
 }
