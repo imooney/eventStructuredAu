@@ -47,7 +47,15 @@ class TStarJetVector : public TLorentzVector
   Double_t m2() const {return M2();} // returns squared invariant mass 
   Double_t m() const {return M();} // returns invariant mass ( 
   Double_t mperp2() const {return Mt2();} // returns the squared transverse mass = k2 
-  Double_t mperp() const {return Mt();} // returns the transverse mass 
+  Double_t mperp() const {return Mt();} // returns the transverse mass
+
+  // KK
+  Int_t mc_pdg_pid()  {
+    if ( GetType()!=1 ) return 0;
+    return TMath::Nint ( fFeaturesD[_DEDX] );
+    // SHOULD FORCE MC TREE, DON'T KNOW HOW
+  } // returns the PDG id. Only works for tracks from mc trees
+
   //double operator[] (int i) const; // returns component i - already in TLorentzVector
   //double operator() (int i) const; // returns component i - already in TLorentzVector
 
