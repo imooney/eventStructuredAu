@@ -1,6 +1,6 @@
 DEPENDROOT    = $(shell [ -n "${ROOTSYS}" ] && echo ${ROOTSYS} || echo "ROOTSYS_NOTSET" )
 
-include ./Makefile.arch
+include ${ROOTSYS}/etc/Makefile.arch
 
 MODULE	      = TStarJetPico
 
@@ -25,6 +25,10 @@ MODSO         = lib$(MODULE).$(DllSuf)
 
 # uncomment for debug info in the library
 # CXXFLAGS     += -g
+
+# kk: some additions require c++11
+CXXFLAGS     += -std=c++11
+
 
 ifeq ($(PLATFORM),win32)
 MODLIB        = lib$(MODULE).lib
