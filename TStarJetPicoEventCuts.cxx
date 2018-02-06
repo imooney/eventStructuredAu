@@ -68,9 +68,22 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
   // Contains("HT3") before Contains("HT")
   __DEBUG(2, Form("mTrigId = %d TrigSel = %s", mTrigId, fTrigSel.Data()));
 
+  //  -------------------- Run 14 HT2 || HT3
+  if (fTrigSel.Contains("HT2") && fTrigSel.Contains("HT3") && !fTrigSel.Contains("pp")){
+    if ( mTrigId==450203 || mTrigId==450213 ||
+	 mTrigId==450202 || mTrigId==450212
+	 ) { // HT3 OR HT3
+      __DEBUG(2, "HT3 || HT2, Trigger for Au+Au  run 14 ok");
+      return kTRUE;
+    } else {
+      __DEBUG(2, "HT3 || HT2, Trigger for Au+Au  run 14 ok");
+      return kFALSE;
+    }
+  }
+
   //  -------------------- Run 14 HT3
   if (fTrigSel.Contains("HT3") && !fTrigSel.Contains("pp")){
-    if ( mTrigId==450203 || mTrigId==450213 ) { // HT3*VPDMB-30 
+    if ( mTrigId==450203 || mTrigId==450213 ) { // HT3
       __DEBUG(2, "HT3, Trigger for Au+Au  run 14 ok");
       return kTRUE;
     } else {
@@ -80,7 +93,7 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
   }
   //  -------------------- Run 14 HT2
   if (fTrigSel.Contains("HT2") && !fTrigSel.Contains("pp")){
-    if ( mTrigId==450202 || mTrigId==450212 ) { // HT3*VPDMB-30 
+    if ( mTrigId==450202 || mTrigId==450212 ) { // HT2*VPDMB-30 
       __DEBUG(2, "HT2, Trigger for Au+Au  run 14 ok");
       return kTRUE;
     } else {
@@ -89,6 +102,36 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
     }
   }
   
+  if (fTrigSel.Contains("VPDMB30") && !fTrigSel.Contains("pp")){
+    if ( mTrigId==450010 || mTrigId==450020 ) { // VPDMB-30 
+      __DEBUG(2, "VPDMB-30, Trigger for Au+Au  run 14 ok");
+      return kTRUE;
+    } else {
+      __DEBUG(2, "VPDMB-30, Trigger for Au+Au  run 14 NOT ok");
+      return kFALSE;
+    }
+  }
+
+  if (fTrigSel.Contains("VPDMB5") && !fTrigSel.Contains("pp")){
+    if ( mTrigId==450008 || mTrigId==450018 ) { // VPDMB-5 
+      __DEBUG(2, "VPDMB-5, Trigger for Au+Au  run 14 ok");
+      return kTRUE;
+    } else {
+      __DEBUG(2, "VPDMB-5, Trigger for Au+Au  run 14 NOT ok");
+      return kFALSE;
+    }
+  }
+
+  if (fTrigSel.Contains("MBMON") && !fTrigSel.Contains("pp")){
+    if ( mTrigId==450008 || mTrigId==450018 ) { // MBMON 
+      __DEBUG(2, "MBMON, Trigger for Au+Au  run 14 ok");
+      return kTRUE;
+    } else {
+      __DEBUG(2, "MBMON, Trigger for Au+Au  run 14 NOT ok");
+      return kFALSE;
+    }
+  }
+
   if (fTrigSel.Contains("pp"))
     {
       // include different pp triggers, MB,HT and JP ...
@@ -208,9 +251,9 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 	  return kFALSE;	
 	}
     } // auau HT
-
-   if (fTrigSel.Contains("MB") && !fTrigSel.Contains("pp"))
-     {
+  
+  if (fTrigSel.Contains("MB") && !fTrigSel.Contains("pp"))
+    {
       if (mTrigId==200001 || mTrigId==200003 || mTrigId==200013)
 	{
 	  __DEBUG(2, "Accept MB trigger for Au+Au.");
@@ -221,12 +264,17 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
 	  __DEBUG(2, "Accept MB trigger for Au+Au run 11.");
 	  return kTRUE;	  
 	}
-      else
-	{
-	  __DEBUG(2, "Reject MB trigger for Au+Au.");
-	  return kFALSE;
-	}
-     } // auau mb
+      else if ( mTrigId==450010 || mTrigId==450020 || // VPDMB-30 
+		mTrigId==450008 || mTrigId==450018 || // VPDMB-5 
+		mTrigId==450008 || mTrigId==450018    // MBMON 
+		) { 
+	__DEBUG(2, "Accept VPDMB-30 || VPDMB-5 || MBMON for Au+Au run 14.");
+	return kTRUE;	  
+      } else {
+	__DEBUG(2, "Reject MB trigger for Au+Au.");
+	return kFALSE;
+      }
+    } // auau mb
    
    if (fTrigSel.Contains("wide") && !fTrigSel.Contains("pp"))
      {
