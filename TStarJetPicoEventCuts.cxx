@@ -68,6 +68,43 @@ Bool_t TStarJetPicoEventCuts::IsTriggerIdOK(Int_t mTrigId)
   // Contains("HT3") before Contains("HT")
   __DEBUG(2, Form("mTrigId = %d TrigSel = %s", mTrigId, fTrigSel.Data()));
 
+  // nick: moving the more specific pAu trigger strings first, so that there is no opportunity
+  // for name collisions when trying to find a substring like "mb", etc
+  // Isaac: pAu year 2015, triggersel options: pAu2015_vpdmb,pAu2015_bbcmb,pAu2015_ht2,pAu2015_jp2
+  // see: https://www.star.bnl.gov/protected/common/common2015/trigger2015/lumipAu200GeV/lum_pertriggerid_pAu2015_200GeV.txt
+  if (fTrigSel.Contains("pAu2015_vpdmb")) { //VPDMB-30
+    if (mTrigId==500904) {
+      __DEBUG(2, "pAu2015_vpdmb trigger ok.");
+      return kTRUE;
+    } else {
+      return kFALSE;
+    }
+  }
+  if (fTrigSel.Contains("pAu2015_bbcmb")) { //BBCMB
+    if (mTrigId==500008 || mTrigId==500018) {
+      __DEBUG(2, "pAu2015_bbcmb trigger ok.");
+      return kTRUE;
+    } else {
+      return kFALSE;
+    }
+  }
+  if (fTrigSel.Contains("pAu2015_ht2")) { //BHT2*BBCMB
+    if (mTrigId==500205 || mTrigId==500215) {
+      __DEBUG(2, "pAu2015_ht2 trigger ok.");
+      return kTRUE;
+    } else {
+      return kFALSE;
+    }
+  }
+  if (fTrigSel.Contains("pAu2015_jp2")) { //JP2
+    if (mTrigId==500401 || mTrigId==500411) {
+      __DEBUG(2, "pAu2015_jp2 trigger ok.");
+      return kTRUE;
+    } else {
+      return kFALSE;
+    }
+  }
+
   //  -------------------- Run 14 HT2 || HT3
   if (fTrigSel.Contains("HT2") && fTrigSel.Contains("HT3") && !fTrigSel.Contains("pp")){
     if ( mTrigId==450203 || mTrigId==450213 ||
