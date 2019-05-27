@@ -651,7 +651,8 @@ Bool_t TStarJetPicoEventCuts::IsEventOK(TStarJetPicoEvent *mEv, TChain *fInputTr
       retval = kFALSE;
   }
   //extra vzVPD-vzTPC cut for Run9 & 10, pp and AuAu
-  if(run > 10085112 && run < 11147025){
+  // and Run 15 pAu
+  if((run > 10085112 && run < 11147025) || (run >= 16125024 && run <= 16159024)){
     if(IsVertexZDiffOK(mEv)==kFALSE)
        retval = kFALSE;
    }
