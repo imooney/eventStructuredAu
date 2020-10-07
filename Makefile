@@ -27,7 +27,7 @@ MODSO         = lib$(MODULE).$(DllSuf)
 # CXXFLAGS     += -g
 
 # kk: some additions require c++11
-CXXFLAGS     += -std=c++11
+CXXFLAGS     += -std=c++17
 
 
 ifeq ($(PLATFORM),win32)
